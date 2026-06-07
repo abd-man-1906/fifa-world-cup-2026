@@ -129,6 +129,27 @@ export default function Home() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 1.1]);
 
+  const [featuredMatches, setFeaturedMatches] = useState([]);
+  const [loadingMatches, setLoadingMatches] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/matches')
+      .then(res => res.json())
+      .then(data => {
+        // Find a couple of group matches and the final
+        const groupMatches = data.filter(m => m.stage === 'group').slice(0, 2);
+        const finalMatch = data.find(m => m.stage === 'final');
+        const list = [...groupMatches];
+        if (finalMatch) list.push(finalMatch);
+        setFeaturedMatches(list.slice(0, 3));
+        setLoadingMatches(false);
+      })
+      .catch(() => {
+        setLoadingMatches(false);
+      });
+  }, []);
+
+
   return (
     <div className="min-h-screen bg-black">
       {/* Hero Section */}
@@ -313,6 +334,109 @@ export default function Home() {
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Matches Section */}
+      <section className="relative py-24 bg-gradient-to-b from-black to-gray-950 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <span className="text-cyan-400 font-bold text-sm tracking-widest uppercase">Opening Fixtures & Finals</span>
+            <h2 className="text-4xl md:text-6xl font-black text-white mt-4">
+              Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Matchups</span>
+            </h2>
+          </motion.div>
+
+          {loadingMatches ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="animate-pulse rounded-3xl bg-white/5 h-48" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {(featuredMatches.length > 0 ? featuredMatches : [
+                {
+                  id: 1,
+                  home_team: { name: 'Argentina', flag: '🇦🇷' },
+                  away_team: { name: 'Japan', flag: '🇯🇵' },
+                  stadium: { name: 'Gillette Stadium', city: 'Foxborough' },
+                  match_date: '2026-06-12T01:00:00+00:00',
+                  stage: 'Group Stage'
+                },
+                {
+                  id: 2,
+                  home_team: { name: 'USA', flag: '🇺🇸' },
+                  away_team: { name: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
+                  stadium: { name: 'SoFi Stadium', city: 'Inglewood' },
+                  match_date: '2026-06-12T20:00:00+00:00',
+                  stage: 'Group Stage'
+                },
+                {
+                  id: 25,
+                  home_team: { name: 'Argentina', flag: '🇦🇷' },
+                  away_team: { name: 'France', flag: '🇫🇷' },
+                  stadium: { name: 'MetLife Stadium', city: 'East Rutherford' },
+                  match_date: '2026-07-19T18:00:00+00:00',
+                  stage: 'Final'
+                }
+              ]).map((match, i) => {
+                const matchDate = new Date(match.match_date);
+                const formattedDate = matchDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', weekday: 'short' });
+                return (
+                  <motion.div
+                    key={match.id || i}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    whileHover={{ y: -8 }}
+                    className="p-6 rounded-3xl bg-white/[0.03] border border-white/10 hover:border-cyan-500/30 transition-all flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex justify-between items-center mb-6">
+                        <span className="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 text-xs font-semibold tracking-wider uppercase">
+                          {match.stage?.replace(/_/g, ' ')}
+                        </span>
+                        <span className="text-gray-400 text-sm font-semibold">{formattedDate}</span>
+                      </div>
+                      <div className="flex items-center justify-between gap-4 mb-6">
+                        <div className="flex flex-col items-center gap-2 flex-1">
+                          <span className="text-4xl">{match.home_team?.flag || '🏳️'}</span>
+                          <span className="text-white font-bold text-center text-sm">{match.home_team?.name || 'TBD'}</span>
+                        </div>
+                        <div className="px-3 py-1 bg-black/40 border border-white/10 rounded-xl text-xs font-black text-gray-400">VS</div>
+                        <div className="flex flex-col items-center gap-2 flex-1">
+                          <span className="text-4xl">{match.away_team?.flag || '🏳️'}</span>
+                          <span className="text-white font-bold text-center text-sm">{match.away_team?.name || 'TBD'}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="pt-4 border-t border-white/5 flex items-center gap-2 text-gray-500 text-xs">
+                      <MapPin size={12} className="text-cyan-500" />
+                      <span className="truncate">{match.stadium?.name || 'Stadium TBD'}, {match.stadium?.city || ''}</span>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
+          <div className="text-center mt-12">
+            <Link to="/matches">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-6 py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-semibold rounded-xl text-sm transition-colors flex items-center gap-2 mx-auto"
+              >
+                View Full Match Schedule <ArrowRight size={16} />
+              </motion.button>
+            </Link>
           </div>
         </div>
       </section>
