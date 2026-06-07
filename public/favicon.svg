@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="fg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#06b6d4"/>
+      <stop offset="50%" stopColor="#3b82f6"/>
+      <stop offset="100%" stopColor="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+  <circle cx="50" cy="50" r="45" fill="url(#fg)"/>
+  <circle cx="50" cy="50" r="42" fill="none" stroke="white" stroke-opacity="0.2" stroke-width="1"/>
+  <text x="50" y="62" text-anchor="middle" font-size="38" font-weight="900" font-family="Arial Black, sans-serif" fill="white">F</text>
+  <text x="50" y="82" text-anchor="middle" font-size="12" font-weight="700" font-family="Arial, sans-serif" fill="rgba(255,255,255,0.9)">2026</text>
+</svg>
