@@ -158,6 +158,11 @@ export async function getTeams() {
   return teams;
 }
 
+export async function getStadiums() {
+  const { stadiums } = await fetchAPI();
+  return stadiums;
+}
+
 export async function getNews() {
   const { news } = await fetchAPI();
   return news;

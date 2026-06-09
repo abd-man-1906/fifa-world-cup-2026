@@ -167,9 +167,17 @@ export default function Home() {
 
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="relative min-h-screen bg-black overflow-x-hidden">
+      {/* Dynamic Background */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '2s' }} />
+      </div>
+
+      <LiveTicker />
+
       {/* Hero Section */}
-      <section ref={heroRef} className="relative h-screen flex items-start justify-center overflow-hidden">
+      <section ref={heroRef} className="relative min-h-[500px] lg:min-h-screen flex items-start justify-center overflow-hidden pt-20 lg:pt-0">
         {/* Background layers */}
         <motion.div style={{ scale: heroScale }} className="absolute inset-0">
           {/* Gradient base */}
@@ -204,7 +212,10 @@ export default function Home() {
         <FloatingParticles />
 
         {/* Hero Content */}
-        <motion.div style={{ opacity: heroOpacity }} className="relative z-10 text-center px-4 max-w-6xl mx-auto pt-24 md:pt-28">
+        <motion.div
+          style={{ opacity: heroOpacity }}
+          className="relative z-10 text-center px-4 max-w-6xl mx-auto pt-10 sm:pt-20 md:pt-32"
+        >
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -312,8 +323,7 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* Live Ticker */}
-      <LiveTicker />
+
 
       {/* Today's Matches */}
       <section className="relative py-16 md:py-20 overflow-hidden">

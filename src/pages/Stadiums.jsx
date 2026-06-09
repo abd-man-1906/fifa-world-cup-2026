@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Users, Building2, ArrowUpRight } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
+import { getStadiums } from '../api/football';
 
 export default function Stadiums() {
   const [stadiums, setStadiums] = useState([]);
@@ -9,8 +10,7 @@ export default function Stadiums() {
   const [hoveredId, setHoveredId] = useState(null);
 
   useEffect(() => {
-    fetch('/api/stadiums')
-      .then(res => res.json())
+    getStadiums()
       .then(data => {
         setStadiums(data);
         setLoading(false);
