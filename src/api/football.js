@@ -82,7 +82,7 @@ function getMatchStatus(matchDate, score) {
   const start = new Date(matchDate);
   const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
   if (now >= start && now <= end) return 'live';
-  if (now > end) return 'upcoming';
+  if (now > end) return 'completed';
   return 'upcoming';
 }
 
