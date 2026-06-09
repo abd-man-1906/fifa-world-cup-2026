@@ -17,6 +17,7 @@ import TeamDetail from './pages/TeamDetail';
 import Matches from './pages/Matches';
 import Stadiums from './pages/Stadiums';
 import Players from './pages/Players';
+import PlayerDetail from './pages/PlayerDetail';
 import LiveScores from './pages/LiveScores';
 import FanZone from './pages/FanZone';
 import History from './pages/History';
@@ -28,6 +29,8 @@ import MatchDetail from './pages/MatchDetail';
 import About from './pages/About';
 import Privacy from './pages/Privacy';
 import Contact from './pages/Contact';
+import Auth from './pages/Auth';
+import Profile from './pages/Profile';
 
 function ScrollToTop() {
   useEffect(() => {
@@ -55,6 +58,7 @@ export default function App() {
                 <Route path="/matches" element={<><ScrollToTop /><PageTransition><Matches /></PageTransition></>} />
                 <Route path="/stadiums" element={<><ScrollToTop /><PageTransition><Stadiums /></PageTransition></>} />
                 <Route path="/players" element={<><ScrollToTop /><PageTransition><Players /></PageTransition></>} />
+                <Route path="/players/:id" element={<><ScrollToTop /><PageTransition><PlayerDetail /></PageTransition></>} />
                 <Route path="/live-scores" element={<><ScrollToTop /><PageTransition><LiveScores /></PageTransition></>} />
                 <Route path="/fan-zone" element={<><ScrollToTop /><PageTransition><FanZone /></PageTransition></>} />
                 <Route path="/history" element={<><ScrollToTop /><PageTransition><History /></PageTransition></>} />
@@ -63,6 +67,8 @@ export default function App() {
                 <Route path="/standings" element={<><ScrollToTop /><PageTransition><Standings /></PageTransition></>} />
                 <Route path="/bracket" element={<><ScrollToTop /><PageTransition><Bracket /></PageTransition></>} />
                 <Route path="/match/:id" element={<><ScrollToTop /><PageTransition><MatchDetail /></PageTransition></>} />
+                <Route path="/login" element={<><ScrollToTop /><PageTransition><Auth /></PageTransition></>} />
+                <Route path="/profile" element={<><ScrollToTop /><PageTransition><Profile /></PageTransition></>} />
                 <Route path="/about" element={<><ScrollToTop /><PageTransition><About /></PageTransition></>} />
                 <Route path="/privacy" element={<><ScrollToTop /><PageTransition><Privacy /></PageTransition></>} />
                 <Route path="/contact" element={<><ScrollToTop /><PageTransition><Contact /></PageTransition></>} />

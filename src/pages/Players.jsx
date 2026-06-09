@@ -1,23 +1,23 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Star, TrendingUp, Target, Shield, Zap, Award } from 'lucide-react';
+import { Star, TrendingUp, Target, Shield, Zap, Award, ArrowRight } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 import { getPlayers } from '../api/football';
 
-function SkillBar({ label, value, color = 'cyan' }) {
+function SkillBar({ label, value, color }) {
   return (
-    <div className="space-y-1.5">
-      <div className="flex justify-between text-sm">
-        <span className="text-gray-400">{label}</span>
-        <span className={`font-bold text-${color}-400`}>{value}</span>
+    <div className="space-y-1">
+      <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider">
+        <span className="text-gray-500">{label}</span>
+        <span className="text-white">{value}</span>
       </div>
-      <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+      <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
         <motion.div
           initial={{ width: 0 }}
           whileInView={{ width: `${value}%` }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, ease: 'easeOut' }}
-          className={`h-full rounded-full bg-gradient-to-r from-${color}-500 to-${color}-400`}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className={`h-full ${color}`}
         />
       </div>
     </div>
@@ -26,88 +26,51 @@ function SkillBar({ label, value, color = 'cyan' }) {
 
 function PlayerCard({ player, index }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
-      whileHover={{ y: -8 }}
-      className="group relative rounded-3xl overflow-hidden border border-white/10 hover:border-cyan-500/30 transition-all duration-500"
-    >
-      {/* Gradient header */}
-      <div className={`h-48 bg-gradient-to-br ${player.team?.gradient || 'from-cyan-900 to-blue-900'} relative overflow-hidden`}>
-        <div className="absolute inset-0 bg-black/20" />
-        
-        {/* Player number watermark */}
-        <span className="absolute bottom-2 right-4 text-[120px] font-black text-white/5 leading-none select-none">
-          {player.number || (index + 1)}
-        </span>
-        
-        {/* Position badge */}
-        <div className="absolute top-4 left-4">
-          <span className="px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm text-xs font-bold text-white border border-white/20">
-            {player.position}
-          </span>
+    <Link to={`/players/${player.id}`}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: index * 0.1 }}
+        whileHover={{ y: -8 }}
+        className="group relative rounded-3xl bg-white/5 border border-white/10 p-6 hover:border-cyan-500/50 transition-all overflow-hidden"
+      >
+        <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+          <span className="text-8xl font-black text-white">#{player.number}</span>
         </div>
-        
-        {/* Rating badge */}
-        <div className="absolute top-4 right-4">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center shadow-lg shadow-yellow-500/30">
-            <span className="text-lg font-black text-white">{player.rating}</span>
+
+        <div className="relative z-10">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center text-3xl shadow-lg border border-white/10 group-hover:scale-110 transition-transform">
+              {player.team?.flag}
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">
+                {player.name}
+              </h3>
+              <p className="text-gray-500 text-sm font-semibold uppercase tracking-widest">{player.position}</p>
+            </div>
           </div>
-        </div>
-        
-        {/* Star player indicator */}
-        {player.is_featured && (
-          <div className="absolute bottom-4 left-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow-500/20 border border-yellow-500/30">
-            <Star size={14} className="text-yellow-400 fill-yellow-400" />
-            <span className="text-xs font-bold text-yellow-400">Featured</span>
+
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <SkillBar label="Pace" value={player.pace} color="bg-cyan-500" />
+            <SkillBar label="Shot" value={player.shooting} color="bg-blue-500" />
+            <SkillBar label="Pass" value={player.passing} color="bg-indigo-500" />
+            <SkillBar label="Def" value={player.defense} color="bg-purple-500" />
           </div>
-        )}
-      </div>
-      
-      {/* Content */}
-      <div className="p-6 bg-gradient-to-b from-gray-900 to-black">
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">
-              {player.name}
-            </h3>
-            <p className="text-gray-400 text-sm mt-1 flex items-center gap-2">
-              <span>{player.team?.flag || '🏳️'}</span>
-              {player.team?.name || 'National Team'}
-            </p>
+
+          <div className="flex items-center justify-between pt-4 border-t border-white/5">
+            <div className="flex items-center gap-2">
+              <Star size={16} className="text-yellow-500 fill-yellow-500" />
+              <span className="text-lg font-black text-white">{player.rating}</span>
+            </div>
+            <div className="flex items-center gap-1 text-cyan-400 text-[10px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
+              Details <ArrowRight size={12} />
+            </div>
           </div>
         </div>
-        
-        {/* Skills */}
-        <div className="space-y-3">
-          <SkillBar label="Pace" value={player.pace || 85} color="cyan" />
-          <SkillBar label="Shooting" value={player.shooting || 80} color="green" />
-          <SkillBar label="Passing" value={player.passing || 82} color="blue" />
-          <SkillBar label="Defense" value={player.defense || 70} color="purple" />
-        </div>
-        
-        {/* Quick stats */}
-        <div className="grid grid-cols-3 gap-3 mt-6 pt-6 border-t border-white/5">
-          <div className="text-center">
-            <Target size={14} className="mx-auto text-cyan-400 mb-1" />
-            <p className="text-white font-bold text-sm">{player.goals || 0}</p>
-            <p className="text-gray-600 text-[10px] uppercase">Goals</p>
-          </div>
-          <div className="text-center">
-            <Zap size={14} className="mx-auto text-yellow-400 mb-1" />
-            <p className="text-white font-bold text-sm">{player.assists || 0}</p>
-            <p className="text-gray-600 text-[10px] uppercase">Assists</p>
-          </div>
-          <div className="text-center">
-            <Award size={14} className="mx-auto text-purple-400 mb-1" />
-            <p className="text-white font-bold text-sm">{player.trophies || 0}</p>
-            <p className="text-gray-600 text-[10px] uppercase">Trophies</p>
-          </div>
-        </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </Link>
   );
 }
 

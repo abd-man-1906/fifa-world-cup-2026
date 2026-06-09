@@ -207,10 +207,7 @@ export async function getNewsBySlug(slug) {
 
 export async function getPlayers() {
   const { teams } = await fetchAPI();
-  // Generate mock featured players from teams if needed, 
-  // but for now we'll just return an empty list or some hardcoded ones if preferred.
-  // Given the PlayerCard needs specific stats, let's provide some high-quality mocks.
-  return [
+  const players = [
     {
       id: 1,
       name: 'Lionel Messi',
@@ -308,6 +305,12 @@ export async function getPlayers() {
       team: teams.find(t => t.name === 'Brazil') || { name: 'Brazil', flag: '🇧🇷' }
     }
   ];
+  return players;
+}
+
+export async function getPlayerById(id) {
+  const players = await getPlayers();
+  return players.find(p => p.id === parseInt(id)) || null;
 }
 
 export async function getStandings() {
@@ -408,5 +411,31 @@ export async function getBracketMatches() {
     };
   }
   return bracket;
+}
+
+export async function searchGlobal(query) {
+  if (!query || query.length < 2) return { teams: [], players: [], news: [] };
+  
+  const q = query.toLowerCase();
+  const [teams, players, news] = await Promise.all([
+    getTeams(),
+    getPlayers(),
+    getNews()
+  ]);
+
+  return {
+    teams: teams.filter(t => 
+      t.name.toLowerCase().includes(q) || 
+      t.fifa_code.toLowerCase().includes(q)
+    ).slice(0, 5),
+    players: players.filter(p => 
+      p.name.toLowerCase().includes(q) || 
+      p.position.toLowerCase().includes(q)
+    ).slice(0, 5),
+    news: news.filter(n => 
+      n.title.toLowerCase().includes(q) || 
+      n.excerpt.toLowerCase().includes(q)
+    ).slice(0, 5)
+  };
 }
 
