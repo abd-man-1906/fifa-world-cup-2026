@@ -43,15 +43,15 @@ export default function LiveDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-400 font-bold">Goals Scored</span>
-              <span className="text-xl font-black text-white">124</span>
+              <span className="text-xl font-black text-white">0</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-400 font-bold">Attendance</span>
-              <span className="text-xl font-black text-white">2.4M</span>
+              <span className="text-xl font-black text-white">0</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-400 font-bold">Avg. Goals</span>
-              <span className="text-xl font-black text-white">2.8</span>
+              <span className="text-xl font-black text-white">0.0</span>
             </div>
           </div>
         </div>
