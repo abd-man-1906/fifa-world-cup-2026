@@ -132,29 +132,34 @@ export default function Home() {
 
   const [featuredMatches, setFeaturedMatches] = useState([]);
   const [liveMatches, setLiveMatches] = useState([]);
+  const [news, setNews] = useState([]);
   const [loadingMatches, setLoadingMatches] = useState(true);
   const [loadingLive, setLoadingLive] = useState(true);
+  const [loadingNews, setLoadingNews] = useState(true);
   const [matchError, setMatchError] = useState(null);
 
   useEffect(() => {
     import('../api/football')
-      .then(({ getAllMatches, getLiveMatches: getLive }) =>
-        Promise.all([getAllMatches(), getLive()])
+      .then(({ getAllMatches, getLiveMatches: getLive, getNews }) =>
+        Promise.all([getAllMatches(), getLive(), getNews()])
       )
-      .then(([all, live]) => {
+      .then(([all, live, newsData]) => {
         const groupMatches = all.filter((m) => m.stage === 'group').slice(0, 2);
         const finalMatch = all.find((m) => m.stage === 'final');
         const list = [...groupMatches];
         if (finalMatch) list.push(finalMatch);
         setFeaturedMatches(list.slice(0, 3));
         setLiveMatches(live);
+        setNews(newsData.slice(0, 3));
         setLoadingMatches(false);
         setLoadingLive(false);
+        setLoadingNews(false);
       })
       .catch((err) => {
         setMatchError(err.message);
         setLoadingMatches(false);
         setLoadingLive(false);
+        setLoadingNews(false);
       });
   }, []);
 
@@ -502,6 +507,82 @@ export default function Home() {
                 View Full Match Schedule <ArrowRight size={16} />
               </motion.button>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Latest News Section */}
+      <section className="relative py-24 bg-black overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6"
+          >
+            <div>
+              <span className="text-cyan-400 font-bold text-sm tracking-widest uppercase">Inside the Tournament</span>
+              <h2 className="text-4xl md:text-6xl font-black text-white mt-4">
+                Latest <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">News</span>
+              </h2>
+            </div>
+            <Link to="/news">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-6 py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-semibold rounded-xl text-sm transition-colors flex items-center gap-2"
+              >
+                Explore All News <ArrowRight size={16} />
+              </motion.button>
+            </Link>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {loadingNews ? (
+              [...Array(3)].map((_, i) => (
+                <div key={i} className="animate-pulse rounded-3xl bg-white/5 h-80" />
+              ))
+            ) : (
+              news.map((article, i) => (
+                <Link key={article.id} to={`/news/${article.slug}`}>
+                  <motion.article
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    whileHover={{ y: -8 }}
+                    className="group relative rounded-3xl overflow-hidden border border-white/10 hover:border-cyan-500/30 transition-all bg-gradient-to-b from-white/[0.03] to-transparent h-full"
+                  >
+                    <div className="aspect-video overflow-hidden">
+                      <img 
+                        src={article.image_url} 
+                        alt={article.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
+                    </div>
+                    <div className="p-6">
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="px-2.5 py-1 rounded-lg bg-cyan-500/10 text-cyan-400 text-[10px] font-bold uppercase tracking-wider">
+                          {article.category}
+                        </span>
+                        <span className="text-gray-500 text-xs flex items-center gap-1">
+                          <Clock size={12} /> {new Date(article.published_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors line-clamp-2 mb-3">
+                        {article.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm line-clamp-2 mb-6">
+                        {article.excerpt}
+                      </p>
+                      <div className="flex items-center gap-2 text-cyan-400 text-sm font-bold">
+                        Read More <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </div>
+                  </motion.article>
+                </Link>
+              ))
+            )}
           </div>
         </div>
       </section>

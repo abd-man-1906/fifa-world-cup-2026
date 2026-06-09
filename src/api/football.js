@@ -4,6 +4,7 @@ let cache = {
   worldcup: null,
   teams: null,
   stadiums: null,
+  news: null,
 };
 
 async function loadJSON(path) {
@@ -13,15 +14,16 @@ async function loadJSON(path) {
 }
 
 export async function fetchAPI() {
-  if (cache.worldcup && cache.teams && cache.stadiums) return cache;
+  if (cache.worldcup && cache.teams && cache.stadiums && cache.news) return cache;
 
-  const [worldcup, teams, stadiums] = await Promise.all([
+  const [worldcup, teams, stadiums, news] = await Promise.all([
     loadJSON(`${DATA_BASE}/worldcup.json`),
     loadJSON(`${DATA_BASE}/worldcup.teams.json`),
     loadJSON(`${DATA_BASE}/worldcup.stadiums.json`),
+    loadJSON(`${DATA_BASE}/news.json`).catch(() => []), // Fallback to empty if news.json missing
   ]);
 
-  cache = { worldcup, teams, stadiums };
+  cache = { worldcup, teams, stadiums, news };
   return cache;
 }
 
@@ -154,6 +156,16 @@ export async function getMatchById(id) {
 export async function getTeams() {
   const { teams } = await fetchAPI();
   return teams;
+}
+
+export async function getNews() {
+  const { news } = await fetchAPI();
+  return news;
+}
+
+export async function getNewsBySlug(slug) {
+  const { news } = await fetchAPI();
+  return news.find(n => n.slug === slug) || null;
 }
 
 export async function getPlayers() {
