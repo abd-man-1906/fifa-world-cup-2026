@@ -119,10 +119,10 @@ export default function Teams() {
             animate={{ opacity: 1, y: 0 }}
           >
             <span className="text-cyan-400 font-bold text-sm tracking-widest uppercase">48 Qualified Teams</span>
-            <h1 className="text-4xl md:text-6xl font-black text-white mt-3">
+            <h1 className="text-3xl md:text-6xl font-black text-white mt-3">
               Meet the <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Champions</span>
             </h1>
-            <p className="text-gray-400 mt-4 text-lg max-w-2xl">
+            <p className="text-gray-400 mt-4 text-base md:text-lg max-w-2xl">
               From defending champions to first-time qualifiers — discover every nation competing for glory in 2026.
             </p>
           </motion.div>
@@ -137,18 +137,12 @@ export default function Teams() {
                   placeholder="Search teams..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 transition-all"
+                  className="w-full pl-12 pr-4 py-3 md:py-4 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 transition-all text-sm md:text-base"
                 />
               </div>
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="sm:hidden flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-semibold hover:bg-white/10 transition-colors"
-              >
-                <Filter size={18} /> Filters
-              </button>
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className="hidden sm:flex items-center gap-2 px-6 py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-semibold hover:bg-white/10 transition-colors"
+                className="flex items-center justify-center gap-2 px-6 py-3 md:py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-semibold hover:bg-white/10 transition-colors text-sm md:text-base"
               >
                 <Filter size={18} /> Filters
                 <ChevronDown size={16} className={`transition-transform ${showFilters ? 'rotate-180' : ''}`} />

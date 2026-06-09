@@ -33,21 +33,21 @@ export default function News() {
               <Newspaper className="text-cyan-400" size={28} />
               <span className="text-cyan-400 font-bold text-sm tracking-widest uppercase">Latest Updates</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-black text-white">
+            <h1 className="text-3xl md:text-6xl font-black text-white">
               News & <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Media</span>
             </h1>
           </motion.div>
 
           {/* Category tabs */}
-          <div className="flex gap-2 mt-8 overflow-x-auto pb-2 scrollbar-hide">
+          <div className="flex gap-2 mt-8 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
             {categories.map(cat => (
               <button
                 key={cat}
                 onClick={() => setCategory(cat)}
-                className={`px-5 py-2 rounded-xl text-sm font-semibold capitalize whitespace-nowrap transition-all ${
+                className={`px-5 py-2.5 rounded-xl text-sm font-semibold capitalize whitespace-nowrap transition-all border ${
                   category === cat
-                    ? 'bg-cyan-500 text-black'
-                    : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                    ? 'bg-cyan-500 text-black border-cyan-500'
+                    : 'bg-white/5 text-gray-400 border-white/10 hover:bg-white/10'
                 }`}
               >
                 {cat.replace('-', ' ')}
@@ -57,16 +57,16 @@ export default function News() {
         </div>
 
         {/* Featured Story */}
-        {!loading && news.length > 0 && (
+        {!loading && news.length > 0 && category === 'all' && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
             <Link to={`/news/${news[0].slug}`}>
               <motion.article
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 whileHover={{ y: -4 }}
-                className="group relative rounded-3xl overflow-hidden border border-white/10 hover:border-cyan-500/30 transition-all cursor-pointer"
+                className="group relative rounded-3xl overflow-hidden border border-white/10 hover:border-cyan-500/30 transition-all cursor-pointer bg-black"
               >
-                <div className="grid md:grid-cols-2">
+                <div className="grid md:grid-cols-[1.2fr_1fr]">
                   <div className="aspect-video md:aspect-auto bg-gray-900 relative overflow-hidden">
                     <img 
                       src={news[0].image_url} 
@@ -74,23 +74,23 @@ export default function News() {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-                    <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-red-500 text-white text-xs font-bold flex items-center gap-1.5">
-                      <TrendingUp size={12} /> Featured
+                    <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center gap-1.5 uppercase tracking-wider">
+                      <TrendingUp size={10} /> Featured
                     </span>
                   </div>
-                  <div className="p-8 md:p-12 flex flex-col justify-center bg-gradient-to-b from-gray-900 to-black">
-                    <span className="text-cyan-400 text-sm font-semibold uppercase tracking-wider mb-3">{news[0].category}</span>
-                    <h2 className="text-2xl md:text-4xl font-black text-white mb-4 group-hover:text-cyan-400 transition-colors leading-tight">
+                  <div className="p-6 md:p-10 lg:p-12 flex flex-col justify-center">
+                    <span className="text-cyan-400 text-xs font-bold uppercase tracking-widest mb-3">{news[0].category}</span>
+                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-white mb-4 group-hover:text-cyan-400 transition-colors leading-tight">
                       {news[0].title}
                     </h2>
-                    <p className="text-gray-400 leading-relaxed mb-6 line-clamp-3">
+                    <p className="text-gray-400 text-sm md:text-base leading-relaxed mb-6 line-clamp-3 md:line-clamp-4">
                       {news[0].excerpt}
                     </p>
-                    <div className="flex items-center gap-4 text-sm text-gray-500">
-                      <span className="flex items-center gap-1.5"><Clock size={14} /> {new Date(news[0].published_at).toLocaleDateString()}</span>
+                    <div className="flex items-center gap-4 text-xs text-gray-500 mb-6">
+                      <span className="flex items-center gap-1.5 font-medium"><Clock size={14} /> {new Date(news[0].published_at).toLocaleDateString()}</span>
                     </div>
-                    <div className="mt-6 flex items-center gap-2 text-cyan-400 font-semibold group/link">
-                      Read Full Story <ArrowRight size={16} className="group-hover/link:translate-x-1 transition-transform" />
+                    <div className="flex items-center gap-2 text-cyan-400 font-bold group/link">
+                      Read Full Story <ArrowRight size={18} className="group-hover/link:translate-x-1 transition-transform" />
                     </div>
                   </div>
                 </div>
@@ -102,14 +102,14 @@ export default function News() {
         {/* News Grid */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="animate-pulse rounded-2xl bg-white/5 h-72" />
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {news.slice(1).map((article, i) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              {(category === 'all' ? news.slice(1) : news).map((article, i) => (
                 <Link key={article.id} to={`/news/${article.slug}`}>
                   <motion.article
                     initial={{ opacity: 0, y: 20 }}

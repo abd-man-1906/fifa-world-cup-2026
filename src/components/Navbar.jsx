@@ -123,36 +123,67 @@ export default function Navbar() {
       {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="lg:hidden bg-black/95 backdrop-blur-xl border-t border-white/10 overflow-hidden"
-          >
-            <div className="px-4 py-6 space-y-2 max-h-[70vh] overflow-y-auto">
-              {navLinks.map((link, i) => (
-                <motion.div
-                  key={link.path}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+            />
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 bottom-0 w-[280px] bg-black border-l border-white/10 z-50 lg:hidden flex flex-col shadow-2xl"
+            >
+              <div className="flex items-center justify-between p-4 border-b border-white/10">
+                <span className="font-black text-white">MENU</span>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 rounded-xl bg-white/5 border border-white/10 text-white"
                 >
-                  <Link
-                    to={link.path}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-base font-semibold transition-all ${
-                      location.pathname === link.path
-                        ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-400 border border-cyan-500/30'
-                        : 'text-gray-300 hover:bg-white/5 hover:text-white'
-                    }`}
+                  <X size={20} />
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                {navLinks.map((link, i) => (
+                  <motion.div
+                    key={link.path}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05 }}
                   >
-                    <span className="text-lg">{link.icon}</span>
-                    {link.label}
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+                    <Link
+                      to={link.path}
+                      onClick={() => setIsOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl text-base font-semibold transition-all ${
+                        location.pathname === link.path
+                          ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/25'
+                          : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                      }`}
+                    >
+                      <span className="text-xl">{link.icon}</span>
+                      {link.label}
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+              <div className="p-4 border-t border-white/10 bg-white/5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-500 font-bold uppercase tracking-widest">Theme</span>
+                  <button
+                    onClick={toggleTheme}
+                    className="p-2 rounded-xl bg-black/40 border border-white/10 text-gray-300 flex items-center gap-2 px-4"
+                  >
+                    {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                    <span className="text-sm font-semibold capitalize">{theme}</span>
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </motion.nav>

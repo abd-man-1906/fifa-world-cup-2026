@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Play, MapPin, Calendar, Users, Trophy, Zap, ChevronRight, Star, Sparkles, Globe } from 'lucide-react';
+import { ArrowRight, Play, MapPin, Calendar, Users, Trophy, Zap, ChevronRight, Star, Sparkles, Globe, Clock } from 'lucide-react';
 import LiveTicker from '../components/LiveTicker';
 import MatchCard from '../components/MatchCard';
+import { getAllMatches, getLiveMatches, getNews } from '../api/football';
 
 // Countdown to June 11, 2026 (World Cup kickoff)
 const KICKOFF_DATE = new Date('2026-06-11T19:00:00-05:00');
@@ -139,10 +140,11 @@ export default function Home() {
   const [matchError, setMatchError] = useState(null);
 
   useEffect(() => {
-    import('../api/football')
-      .then(({ getAllMatches, getLiveMatches: getLive, getNews }) =>
-        Promise.all([getAllMatches(), getLive(), getNews()])
-      )
+    setLoadingMatches(true);
+    setLoadingLive(true);
+    setLoadingNews(true);
+    
+    Promise.all([getAllMatches(), getLiveMatches(), getNews()])
       .then(([all, live, newsData]) => {
         const groupMatches = all.filter((m) => m.stage === 'group').slice(0, 2);
         const finalMatch = all.find((m) => m.stage === 'final');
@@ -220,14 +222,14 @@ export default function Home() {
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 1, delay: 0.4, ease: 'easeOut' }}
-            className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black leading-none tracking-tighter"
+            className="text-4xl sm:text-7xl md:text-8xl lg:text-9xl font-black leading-tight sm:leading-none tracking-tighter"
           >
             <span className="block text-white">FIFA WORLD</span>
             <span className="block mt-2">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600">CUP</span>
             </span>
             <motion.span
-              className="block mt-2 text-4xl sm:text-5xl md:text-7xl lg:text-8xl"
+              className="block mt-2 text-3xl sm:text-5xl md:text-7xl lg:text-8xl"
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 1, type: 'spring', stiffness: 100 }}
