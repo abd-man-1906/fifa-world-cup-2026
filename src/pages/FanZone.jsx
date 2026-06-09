@@ -1,272 +1,242 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { ThumbsUp, MessageCircle, Share2, Download, Image as ImageIcon, Vote, Music, Heart, Flame } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Trophy, Star, Target, Users, Zap, Shield, ChevronRight, MessageSquare, Heart } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
+import { getLiveMatches } from '../api/football';
+import supabase from '../lib/supabase';
 
-const wallpapers = [
-  { id: 1, title: 'Glory Awaits', gradient: 'from-cyan-600 to-blue-800', downloads: 125000 },
-  { id: 2, title: 'United We Stand', gradient: 'from-purple-600 to-pink-700', downloads: 98000 },
-  { id: 3, title: 'Champions Rise', gradient: 'from-yellow-600 to-orange-700', downloads: 156000 },
-  { id: 4, title: 'The Beautiful Game', gradient: 'from-green-600 to-teal-700', downloads: 89000 },
-  { id: 5, title: 'Night Under Lights', gradient: 'from-indigo-700 to-purple-900', downloads: 112000 },
-  { id: 6, title: 'Golden Moment', gradient: 'from-amber-500 to-red-700', downloads: 134000 },
-];
+function PredictorCard({ match, onPredict }) {
+  const [homeScore, setHomeScore] = useState('');
+  const [awayScore, setAwayScore] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
-const memes = [
-  { id: 1, emoji: '😂', text: 'When you finally understand offside rule', likes: 15420 },
-  { id: 2, emoji: '⚽', text: 'Me watching World Cup instead of working', likes: 12300 },
-  { id: 3, emoji: '🐐', text: 'GOAT debates at 3am', likes: 18900 },
-  { id: 4, emoji: '😭', text: 'When your team loses in penalties', likes: 22100 },
-  { id: 5, emoji: '🎉', text: 'Me after my team scores', likes: 16700 },
-  { id: 6, emoji: '🤡', text: 'VAR decisions be like', likes: 19800 },
-];
-
-function PollCard({ poll, onVote }) {
-  const [hasVoted, setHasVoted] = useState(false);
-  const totalVotes = poll.votes?.reduce((a, b) => a + b, 0) || 1;
-
-  const handleVote = (index) => {
-    if (!hasVoted) {
-      onVote(poll.id, index);
-      setHasVoted(true);
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (homeScore === '' || awayScore === '') return;
+    onPredict(match.id, parseInt(homeScore), parseInt(awayScore));
+    setSubmitted(true);
   };
 
   return (
     <motion.div
-      whileHover={{ y: -4 }}
-      className="p-6 rounded-2xl bg-gradient-to-b from-white/[0.07] to-white/[0.02] border border-white/10 hover:border-purple-500/30 transition-all"
+      whileHover={{ y: -5 }}
+      className="bg-white/5 border border-white/10 rounded-3xl p-6 relative overflow-hidden group"
     >
-      <div className="flex items-center gap-3 mb-4">
-        <Vote className="text-purple-400" size={20} />
-        <h3 className="font-bold text-white">{poll.question}</h3>
+      <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+        <Target size={100} />
       </div>
-      
-      <div className="space-y-3">
-        {(poll.options || []).map((option, i) => {
-          const voteCount = poll.votes?.[i] || 0;
-          const percentage = hasVoted ? ((voteCount / totalVotes) * 100).toFixed(0) : 0;
-          
-          return (
-            <button
-              key={i}
-              onClick={() => handleVote(i)}
-              disabled={hasVoted}
-              className={`relative w-full text-left p-3 rounded-xl border transition-all overflow-hidden ${
-                hasVoted
-                  ? 'border-white/10 cursor-default'
-                  : 'border-white/10 hover:border-purple-500/50 hover:bg-purple-500/5 cursor-pointer'
-              }`}
-            >
-              {hasVoted && (
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${percentage}%` }}
-                  transition={{ duration: 0.5 }}
-                  className={`absolute inset-y-0 left-0 bg-gradient-to-r from-purple-500/20 to-purple-500/10`}
-                />
-              )}
-              <div className="relative flex justify-between">
-                <span className="text-sm font-medium text-white">{option}</span>
-                {hasVoted && <span className="text-sm text-purple-400 font-bold">{percentage}%</span>}
-              </div>
-            </button>
-          );
-        })}
+
+      <div className="flex items-center justify-between mb-6">
+        <span className="text-[10px] font-black text-cyan-400 uppercase tracking-[0.2em]">Group {match.group}</span>
+        <span className="text-[10px] font-bold text-gray-500">{new Date(match.match_date).toLocaleDateString()}</span>
       </div>
-      
-      <p className="text-xs text-gray-500 mt-4">{totalVotes.toLocaleString()} votes</p>
+
+      <div className="flex items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col items-center gap-2 flex-1">
+          <span className="text-4xl">{match.home_team.flag}</span>
+          <span className="text-xs font-black text-white uppercase text-center">{match.home_team.name}</span>
+        </div>
+        <div className="text-2xl font-black text-white/20">VS</div>
+        <div className="flex flex-col items-center gap-2 flex-1">
+          <span className="text-4xl">{match.away_team.flag}</span>
+          <span className="text-xs font-black text-white uppercase text-center">{match.away_team.name}</span>
+        </div>
+      </div>
+
+      {submitted ? (
+        <div className="text-center py-4 bg-cyan-500/10 border border-cyan-500/20 rounded-2xl">
+          <p className="text-cyan-400 font-bold text-sm">Prediction Saved!</p>
+          <p className="text-white text-xl font-black mt-1">{homeScore} - {awayScore}</p>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="flex items-center justify-center gap-4">
+            <input
+              type="number"
+              min="0"
+              placeholder="0"
+              value={homeScore}
+              onChange={(e) => setHomeScore(e.target.value)}
+              className="w-16 h-16 bg-black/40 border border-white/10 rounded-2xl text-center text-2xl font-black text-white focus:outline-none focus:border-cyan-500 transition-colors"
+            />
+            <span className="text-gray-600 font-black">-</span>
+            <input
+              type="number"
+              min="0"
+              placeholder="0"
+              value={awayScore}
+              onChange={(e) => setAwayScore(e.target.value)}
+              className="w-16 h-16 bg-black/40 border border-white/10 rounded-2xl text-center text-2xl font-black text-white focus:outline-none focus:border-cyan-500 transition-colors"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-black rounded-2xl shadow-lg shadow-cyan-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+          >
+            LOCK PREDICTION
+          </button>
+        </form>
+      )}
     </motion.div>
   );
 }
 
 export default function FanZone() {
-  const [polls, setPolls] = useState([]);
+  const [upcomingMatches, setUpcomingMatches] = useState([]);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('polls');
 
   useEffect(() => {
-    fetch('/api/polls')
-      .then(res => res.json())
-      .then(data => {
-        setPolls(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+    const init = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      const matches = await getLiveMatches();
+      setUpcomingMatches(matches.slice(0, 3));
+      setLoading(false);
+    };
+    init();
   }, []);
 
-  const handleVote = async (pollId, optionIndex) => {
-    try {
-      const res = await fetch('/api/polls', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ poll_id: pollId, option_index: optionIndex }),
-      });
-      if (res.ok) {
-        const updated = await res.json();
-        setPolls(polls.map(p => p.id === updated.id ? updated : p));
-      }
-    } catch (err) {
-      console.error('Vote failed:', err);
+  const handlePredict = async (matchId, home, away) => {
+    if (!user) {
+      alert('Please sign in to save your predictions!');
+      return;
     }
-  };
+    
+    const { error } = await supabase
+      .from('predictions')
+      .upsert({
+        user_id: user.id,
+        match_id: matchId,
+        home_score: home,
+        away_score: away,
+        created_at: new Date().toISOString()
+      });
 
-  const tabs = [
-    { id: 'polls', label: '📊 Polls & Quizzes', icon: Vote },
-    { id: 'wallpapers', label: '🖼️ Wallpapers', icon: ImageIcon },
-    { id: 'memes', label: '😂 Meme Gallery', icon: MessageCircle },
-    { id: 'chants', label: '🎵 Fan Chants', icon: Music },
-  ];
+    if (error) console.error('Prediction error:', error);
+  };
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-black pt-24 pb-16">
-        {/* Header */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="flex items-center gap-3 mb-4">
-              <Flame className="text-orange-500" size={28} />
-              <span className="text-cyan-400 font-bold text-sm tracking-widest uppercase">For The Fans</span>
-            </div>
-            <h1 className="text-4xl md:text-6xl font-black text-white">
-              Fan <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">Zone</span>
-            </h1>
-            <p className="text-gray-400 mt-4 text-lg max-w-2xl">
-              Join millions of fans worldwide. Vote, share, download, and celebrate the beautiful game together.
-            </p>
-          </motion.div>
-
-          {/* Tabs */}
-          <div className="flex gap-2 mt-8 overflow-x-auto pb-2">
-            {tabs.map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
-                  activeTab === tab.id
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                    : 'bg-white/5 text-gray-400 hover:bg-white/10'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Tab Content */}
+      <div className="min-h-screen bg-black pt-24 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Polls Tab */}
-          {activeTab === 'polls' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
-              {loading ? (
-                <div className="col-span-2 space-y-4">
-                  {[...Array(3)].map((_, i) => (
-                    <div key={i} className="animate-pulse rounded-2xl bg-white/5 h-48" />
+          
+          {/* Header */}
+          <div className="text-center mb-16">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[10px] font-black uppercase tracking-[0.2em] mb-6"
+            >
+              <Zap size={12} className="fill-current" /> Interactive Experience
+            </motion.div>
+            <h1 className="text-5xl md:text-7xl font-black text-white mb-6">
+              Fan <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">Zone</span>
+            </h1>
+            <p className="text-gray-500 max-w-2xl mx-auto font-bold uppercase tracking-widest text-sm">
+              Predict scores, earn badges, and compete with fans across the globe.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            {/* Main Content: Predictor */}
+            <div className="lg:col-span-2 space-y-12">
+              <section>
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-2xl font-black text-white flex items-center gap-3">
+                    <Target className="text-red-500" /> Match Predictor
+                  </h2>
+                  <div className="px-4 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                    Win +50 Points
+                  </div>
+                </div>
+
+                {loading ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {[...Array(2)].map((_, i) => (
+                      <div key={i} className="h-64 bg-white/5 rounded-3xl animate-pulse" />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {upcomingMatches.map(match => (
+                      <PredictorCard key={match.id} match={match} onPredict={handlePredict} />
+                    ))}
+                  </div>
+                )}
+              </section>
+
+              <section className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-[2.5rem] p-8 md:p-12 border border-white/10 relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-8 opacity-10">
+                  <Shield size={150} />
+                </div>
+                <div className="relative z-10">
+                  <h2 className="text-3xl font-black text-white mb-4">Digital Collectibles</h2>
+                  <p className="text-gray-400 font-bold uppercase tracking-widest text-sm mb-8">Unlock exclusive badges as you engage with the World Cup.</p>
+                  
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    {[
+                      { icon: Heart, label: 'True Fan', color: 'text-red-500' },
+                      { icon: Zap, label: 'First Goal', color: 'text-yellow-500' },
+                      { icon: Star, label: 'Predictor', color: 'text-cyan-400' },
+                      { icon: Trophy, label: 'Champion', color: 'text-purple-500' },
+                    ].map(badge => (
+                      <div key={badge.label} className="flex flex-col items-center gap-3 p-4 rounded-3xl bg-black/40 border border-white/5 group hover:border-white/20 transition-all">
+                        <div className={`w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center ${badge.color} group-hover:scale-110 transition-transform`}>
+                          <badge.icon size={24} />
+                        </div>
+                        <span className="text-[10px] font-black text-white uppercase tracking-widest text-center">{badge.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            {/* Sidebar: Leaderboard & Community */}
+            <div className="lg:col-span-1 space-y-8">
+              <div className="bg-white/5 border border-white/10 rounded-[2.5rem] p-8">
+                <h3 className="text-xl font-black text-white mb-8 flex items-center gap-3">
+                  <Trophy className="text-yellow-500" /> Top Predictors
+                </h3>
+                <div className="space-y-6">
+                  {[
+                    { name: 'Alex_Futbol', points: 1250, rank: 1, avatar: '⚽' },
+                    { name: 'Maria_2026', points: 1100, rank: 2, avatar: '🏆' },
+                    { name: 'John_Doe', points: 950, rank: 3, avatar: '🧤' },
+                    { name: 'Fanatic_US', points: 880, rank: 4, avatar: '🏟️' },
+                  ].map(fan => (
+                    <div key={fan.name} className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-xl">
+                          {fan.avatar}
+                        </div>
+                        <div>
+                          <p className="font-bold text-white text-sm">{fan.name}</p>
+                          <p className="text-[10px] text-gray-500 font-bold uppercase">{fan.points} PTS</p>
+                        </div>
+                      </div>
+                      <span className={`text-lg font-black ${fan.rank === 1 ? 'text-yellow-500' : 'text-gray-700'}`}>#{fan.rank}</span>
+                    </div>
                   ))}
                 </div>
-              ) : polls.length > 0 ? (
-                polls.map(poll => (
-                  <PollCard key={poll.id} poll={poll} onVote={handleVote} />
-                ))
-              ) : (
-                <p className="text-gray-500 col-span-2 text-center py-10">No polls available yet.</p>
-              )}
-            </div>
-          )}
+                <button className="w-full mt-10 py-4 rounded-2xl bg-white/5 hover:bg-white/10 text-gray-400 font-bold text-xs uppercase tracking-widest transition-all">
+                  View Full Rankings
+                </button>
+              </div>
 
-          {/* Wallpapers Tab */}
-          {activeTab === 'wallpapers' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {wallpapers.map(wallpaper => (
-                <motion.div
-                  key={wallpaper.id}
-                  whileHover={{ y: -8, scale: 1.02 }}
-                  className="group relative rounded-2xl overflow-hidden aspect-video cursor-pointer"
-                >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${wallpaper.gradient}`} />
-                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors" />
-                  
-                  <div className="absolute inset-0 flex flex-col items-center justify-center p-6">
-                    <ImageIcon size={32} className="text-white/50 mb-3" />
-                    <h3 className="font-bold text-white text-lg">{wallpaper.title}</h3>
-                    <p className="text-white/60 text-sm mt-1">FIFA 2026 Official Wallpaper</p>
-                  </div>
-                  
-                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent translate-y-2 group-hover:translate-y-0 transition-transform">
-                    <div className="flex items-center justify-between">
-                      <span className="text-white/80 text-sm flex items-center gap-1.5">
-                        <Download size={14} /> {wallpaper.downloads.toLocaleString()} downloads
-                      </span>
-                      <button className="px-4 py-2 rounded-lg bg-white/20 hover:bg-white/30 text-white text-sm font-semibold transition-colors flex items-center gap-1.5">
-                        <Download size={14} /> Download
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+              <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-[2.5rem] p-8 relative overflow-hidden group">
+                <MessageSquare className="absolute -bottom-4 -right-4 text-cyan-500/10 group-hover:scale-110 transition-transform" size={120} />
+                <h3 className="text-xl font-black text-white mb-2">Fan Chat</h3>
+                <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-6">Join the global conversation.</p>
+                <button className="w-full py-4 bg-white text-black font-black rounded-2xl flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                  JOIN COMMUNITY <ChevronRight size={16} />
+                </button>
+              </div>
             </div>
-          )}
 
-          {/* Memes Tab */}
-          {activeTab === 'memes' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {memes.map(meme => (
-                <motion.div
-                  key={meme.id}
-                  whileHover={{ y: -4, scale: 1.02 }}
-                  className="p-6 rounded-2xl bg-gradient-to-b from-white/[0.07] to-white/[0.02] border border-white/10 hover:border-yellow-500/30 transition-all"
-                >
-                  <span className="text-5xl block mb-4">{meme.emoji}</span>
-                  <p className="text-white font-medium leading-relaxed">{meme.text}</p>
-                  <div className="mt-4 pt-4 border-t border-white/5 flex items-center gap-4">
-                    <button className="flex items-center gap-1.5 text-red-400 hover:text-red-300 text-sm transition-colors">
-                      <Heart size={16} className="fill-red-400" /> {meme.likes.toLocaleString()}
-                    </button>
-                    <button className="flex items-center gap-1.5 text-gray-400 hover:text-cyan-400 text-sm transition-colors">
-                      <Share2 size={16} /> Share
-                    </button>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          )}
-
-          {/* Chants Tab */}
-          {activeTab === 'chants' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
-              {[{ country: 'Brazil', flag: '🇧🇷', chant: 'Eu sou brasileiro, com muito orgulho, com muito amor!', color: 'from-green-600 to-yellow-600' },
-                { country: 'Argentina', flag: '🇦🇷', chant: 'Vamos, vamos Argentina!', color: 'from-blue-600 to-white/20' },
-                { country: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', chant: "It's coming home, it's coming home!", color: 'from-red-600 to-white/20' },
-                { country: 'Germany', flag: '🇩🇪', chant: 'Oh wie ist das schön! Deutschland!', color: 'from-black to-yellow-600/40' },
-                { country: 'Spain', flag: '🇪🇸', chant: 'A por ellos, oé! Vamos España!', color: 'from-red-600 to-yellow-600' },
-                { country: 'France', flag: '🇫🇷', chant: 'Allez les Bleus! On va gagner!', color: 'from-blue-600 to-red-600' },
-              ].map((item, i) => (
-                <motion.div
-                  key={item.country}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.02 }}
-                  className={`relative p-6 rounded-2xl bg-gradient-to-br ${item.color} border border-white/10 overflow-hidden group cursor-pointer`}
-                >
-                  <div className="absolute top-4 right-4 text-6xl opacity-20 group-hover:opacity-30 transition-opacity">
-                    {item.flag}
-                  </div>
-                  <div className="relative">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="text-3xl">{item.flag}</span>
-                      <h3 className="font-bold text-white text-lg">{item.country}</h3>
-                    </div>
-                    <p className="text-white/80 italic text-lg leading-relaxed">"{item.chant}"</p>
-                    <button className="mt-4 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-semibold transition-colors">
-                      <Music size={16} /> Play Chant
-                    </button>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </PageTransition>

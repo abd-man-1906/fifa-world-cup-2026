@@ -31,6 +31,7 @@ import Privacy from './pages/Privacy';
 import Contact from './pages/Contact';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
+import FanZone from './pages/FanZone';
 
 function ScrollToTop() {
   useEffect(() => {
@@ -60,7 +61,7 @@ export default function App() {
                 <Route path="/players" element={<><ScrollToTop /><PageTransition><Players /></PageTransition></>} />
                 <Route path="/players/:id" element={<><ScrollToTop /><PageTransition><PlayerDetail /></PageTransition></>} />
                 <Route path="/live-scores" element={<><ScrollToTop /><PageTransition><LiveScores /></PageTransition></>} />
-                <Route path="/fan-zone" element={<><ScrollToTop /><PageTransition><FanZone /></PageTransition></>} />
+                <Route path="/fanzone" element={<><ScrollToTop /><PageTransition><FanZone /></PageTransition></>} />
                 <Route path="/history" element={<><ScrollToTop /><PageTransition><History /></PageTransition></>} />
                 <Route path="/news" element={<><ScrollToTop /><PageTransition><News /></PageTransition></>} />
                 <Route path="/news/:slug" element={<><ScrollToTop /><PageTransition><NewsDetail /></PageTransition></>} />
