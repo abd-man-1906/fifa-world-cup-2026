@@ -400,7 +400,3 @@ export async function getBracketMatches() {
   return bracket;
 }
 
-export async function getStadiums() {
-  const { stadiums } = await fetchAPI();
-  return stadiums.stadiums || [];
-}
