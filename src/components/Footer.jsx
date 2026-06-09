@@ -4,8 +4,8 @@ import { Globe, Twitter, Instagram, Youtube, Facebook, Heart } from 'lucide-reac
 
 const footerLinks = {
   tournament: [
-    { label: 'About FIFA 2026', href: '#' },
-    { label: 'Host Cities', href: '/tickets' },
+    { label: 'About FIFA 2026', href: '/about' },
+    { label: 'Host Cities', href: '/stadiums' },
     { label: 'Stadiums', href: '/stadiums' },
     { label: 'Match Schedule', href: '/matches' },
     { label: 'Tickets', href: '/tickets' },
@@ -26,7 +26,8 @@ const footerLinks = {
     { label: 'News', href: '/news' },
     { label: 'History', href: '/history' },
     { label: 'Live Scores', href: '/live-scores' },
-    { label: 'Contact', href: '#' },
+    { label: 'Contact', href: '/contact' },
+    { label: 'Privacy Policy', href: '/privacy' },
   ],
 };
 

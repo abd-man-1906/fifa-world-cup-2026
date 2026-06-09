@@ -11,6 +11,8 @@ const navLinks = [
   { path: '/stadiums', label: 'Stadiums', icon: '🏟️' },
   { path: '/players', label: 'Players', icon: '⭐' },
   { path: '/live-scores', label: 'Live', icon: '🔴' },
+  { path: '/standings', label: 'Standings', icon: '📊' },
+  { path: '/bracket', label: 'Bracket', icon: '🏅' },
   { path: '/fan-zone', label: 'Fan Zone', icon: '🎉' },
   { path: '/history', label: 'History', icon: '📜' },
   { path: '/news', label: 'News', icon: '📰' },

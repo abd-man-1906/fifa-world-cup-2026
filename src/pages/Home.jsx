@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Play, MapPin, Calendar, Users, Trophy, Zap, ChevronRight, Star, Sparkles, Globe } from 'lucide-react';
 import LiveTicker from '../components/LiveTicker';
+import MatchCard from '../components/MatchCard';
 
 // Countdown to June 11, 2026 (World Cup kickoff)
 const KICKOFF_DATE = new Date('2026-06-11T19:00:00-05:00');
@@ -130,22 +131,30 @@ export default function Home() {
   const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 1.1]);
 
   const [featuredMatches, setFeaturedMatches] = useState([]);
+  const [liveMatches, setLiveMatches] = useState([]);
   const [loadingMatches, setLoadingMatches] = useState(true);
+  const [loadingLive, setLoadingLive] = useState(true);
+  const [matchError, setMatchError] = useState(null);
 
   useEffect(() => {
-    fetch('/api/matches')
-      .then(res => res.json())
-      .then(data => {
-        // Find a couple of group matches and the final
-        const groupMatches = data.filter(m => m.stage === 'group').slice(0, 2);
-        const finalMatch = data.find(m => m.stage === 'final');
+    import('../api/football')
+      .then(({ getAllMatches, getLiveMatches: getLive }) =>
+        Promise.all([getAllMatches(), getLive()])
+      )
+      .then(([all, live]) => {
+        const groupMatches = all.filter((m) => m.stage === 'group').slice(0, 2);
+        const finalMatch = all.find((m) => m.stage === 'final');
         const list = [...groupMatches];
         if (finalMatch) list.push(finalMatch);
         setFeaturedMatches(list.slice(0, 3));
+        setLiveMatches(live);
         setLoadingMatches(false);
+        setLoadingLive(false);
       })
-      .catch(() => {
+      .catch((err) => {
+        setMatchError(err.message);
         setLoadingMatches(false);
+        setLoadingLive(false);
       });
   }, []);
 
@@ -298,6 +307,62 @@ export default function Home() {
 
       {/* Live Ticker */}
       <LiveTicker />
+
+      {/* Today's Matches */}
+      <section className="relative py-16 md:py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-950 to-black" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-10"
+          >
+            <span className="text-red-400 font-bold text-sm tracking-widest uppercase">Live & Upcoming</span>
+            <h2 className="text-3xl md:text-5xl font-black text-white mt-3">
+              Today&apos;s <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Matches</span>
+            </h2>
+          </motion.div>
+
+          {loadingLive ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="animate-pulse rounded-2xl bg-white/5 h-40" />
+              ))}
+            </div>
+          ) : matchError ? (
+            <p className="text-center text-gray-500">Could not load matches: {matchError}</p>
+          ) : liveMatches.length === 0 ? (
+            <p className="text-center text-gray-500">No matches scheduled for today.</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {liveMatches.map((match, i) => (
+                <motion.div
+                  key={match.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <MatchCard match={match} compact />
+                </motion.div>
+              ))}
+            </div>
+          )}
+
+          <div className="text-center mt-8">
+            <Link to="/matches">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-6 py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-semibold rounded-xl text-sm transition-colors inline-flex items-center gap-2"
+              >
+                View All Matches <ArrowRight size={16} />
+              </motion.button>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Features Section */}
       <section className="relative py-24 md:py-32 overflow-hidden">

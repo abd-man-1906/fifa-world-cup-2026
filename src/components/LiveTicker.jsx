@@ -6,10 +6,17 @@ export default function LiveTicker() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/scores')
-      .then(res => res.json())
-      .then(data => {
-        setMatches(data.slice(0, 6));
+    import('../api/football')
+      .then(({ getAllMatches }) => getAllMatches())
+      .then((data) => {
+        const now = Date.now();
+        const relevant = data
+          .filter((m) => {
+            const t = new Date(m.match_date).getTime();
+            return m.status === 'live' || (t >= now - 24 * 60 * 60 * 1000 && t <= now + 7 * 24 * 60 * 60 * 1000);
+          })
+          .slice(0, 6);
+        setMatches(relevant.length ? relevant : data.slice(0, 6));
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -34,11 +41,11 @@ export default function LiveTicker() {
               {match.status === 'live' && <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />}
               {match.status === 'live' ? 'LIVE' : match.status === 'upcoming' ? 'UPCOMING' : 'FT'}
             </span>
-            <span className="text-white font-semibold text-sm">{match.home_team?.code || 'TBD'}</span>
+            <span className="text-white font-semibold text-sm">{match.home_team?.code || match.home_team?.name?.slice(0, 3) || 'TBD'}</span>
             <span className="text-cyan-400 font-bold text-sm">
-              {match.home_score ?? '-'} - {match.away_score ?? '-'}
+              {match.status === 'upcoming' && match.home_score == null ? 'vs' : `${match.home_score ?? '-'} - ${match.away_score ?? '-'}`}
             </span>
-            <span className="text-white font-semibold text-sm">{match.away_team?.code || 'TBD'}</span>
+            <span className="text-white font-semibold text-sm">{match.away_team?.code || match.away_team?.name?.slice(0, 3) || 'TBD'}</span>
             <span className="text-gray-500 text-xs">|</span>
           </div>
         ))}
