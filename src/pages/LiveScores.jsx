@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Radio, Activity, TrendingUp, Minus, Plus } from 'lucide-react';
+import { Radio, Activity, TrendingUp, Minus, Plus, RefreshCw } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
+import { getLiveScores } from '../api/football';
 
 function ScoreAnimation({ score, isLive }) {
   return (
@@ -158,16 +159,31 @@ function LiveMatchCard({ match }) {
 export default function LiveScores() {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState(new Date());
   const [filter, setFilter] = useState('all');
 
+  const fetchScores = async (isInitial = false) => {
+    if (isInitial) setLoading(true);
+    try {
+      const data = await getLiveScores();
+      setMatches(data);
+      setLastUpdated(new Date());
+    } catch (error) {
+      console.error('Failed to fetch scores:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetch('/api/scores')
-      .then(res => res.json())
-      .then(data => {
-        setMatches(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+    fetchScores(true);
+    
+    // Auto-refresh every 60 seconds
+    const interval = setInterval(() => {
+      fetchScores();
+    }, 60000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const filteredMatches = filter === 'all' ? matches : matches.filter(m => m.status === filter);
@@ -177,26 +193,41 @@ export default function LiveScores() {
       <div className="min-h-screen bg-black pt-24 pb-16">
         {/* Header */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="flex items-center gap-3 mb-4">
-              <Radio className="text-red-500 animate-pulse" size={28} />
-              <span className="text-cyan-400 font-bold text-sm tracking-widest uppercase">Real-Time Updates</span>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}>
+              <div className="flex items-center gap-3 mb-4">
+                <Radio className="text-red-500 animate-pulse" size={28} />
+                <span className="text-cyan-400 font-bold text-sm tracking-widest uppercase">Real-Time Updates</span>
+              </div>
+              <h1 className="text-4xl md:text-6xl font-black text-white">
+                Live <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-500">Scores</span>
+              </h1>
+            </motion.div>
+
+            <div className="flex items-center gap-4 bg-white/5 border border-white/10 p-4 rounded-2xl">
+              <div className="text-right">
+                <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">Last Update</p>
+                <p className="text-sm font-bold text-white">{lastUpdated.toLocaleTimeString()}</p>
+              </div>
+              <button 
+                onClick={() => fetchScores()}
+                className="p-3 rounded-xl bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-all group"
+              >
+                <RefreshCw size={20} className="group-active:rotate-180 transition-transform duration-500" />
+              </button>
             </div>
-            <h1 className="text-4xl md:text-6xl font-black text-white">
-              Live <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-500">Scores</span>
-            </h1>
-          </motion.div>
+          </div>
           
           {/* Filters */}
-          <div className="flex gap-2 mt-6">
-            {[{ id: 'all', label: 'All' }, { id: 'live', label: '🔴 Live' }, { id: 'upcoming', label: '⏰ Upcoming' }, { id: 'completed', label: '✓ Completed' }].map(f => (
+          <div className="flex flex-wrap gap-2 mt-8">
+            {[{ id: 'all', label: 'All Matches' }, { id: 'live', label: '🔴 Live Now' }, { id: 'upcoming', label: '⏰ Upcoming' }, { id: 'completed', label: '✓ Completed' }].map(f => (
               <button
                 key={f.id}
                 onClick={() => setFilter(f.id)}
-                className={`px-5 py-2 rounded-xl text-sm font-semibold transition-all ${
+                className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all border ${
                   filter === f.id
-                    ? 'bg-cyan-500 text-black'
-                    : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                    ? 'bg-cyan-500 border-cyan-500 text-black shadow-lg shadow-cyan-500/20'
+                    : 'bg-white/5 border-white/5 text-gray-400 hover:bg-white/10 hover:border-white/10'
                 }`}
               >
                 {f.label}
@@ -209,15 +240,20 @@ export default function LiveScores() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
             <div className="space-y-4">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="animate-pulse rounded-2xl bg-white/5 h-48" />
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="animate-pulse rounded-3xl bg-white/5 h-48 border border-white/10" />
               ))}
             </div>
-          ) : (
-            <div className="space-y-4">
+          ) : filteredMatches.length > 0 ? (
+            <div className="space-y-6">
               {filteredMatches.map(match => (
                 <LiveMatchCard key={match.id} match={match} />
               ))}
+            </div>
+          ) : (
+            <div className="text-center py-20 bg-white/5 rounded-[2.5rem] border border-dashed border-white/10">
+              <Activity size={48} className="mx-auto text-gray-700 mb-4" />
+              <p className="text-gray-500 font-bold uppercase tracking-widest">No {filter} matches found</p>
             </div>
           )}
         </div>

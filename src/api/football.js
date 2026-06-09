@@ -163,6 +163,53 @@ export async function getLiveMatches() {
     .slice(0, 6);
 }
 
+export async function getLiveScores() {
+  const apiKey = import.meta.env.VITE_FOOTBALL_API_KEY;
+  
+  // If API key exists, we could fetch from a real service like football-data.org
+  // For now, we simulate live data from our local JSON
+  if (apiKey) {
+    try {
+      // Example implementation for football-data.org
+      // const res = await fetch('https://api.football-data.org/v4/matches', {
+      //   headers: { 'X-Auth-Token': apiKey }
+      // });
+      // return await res.json();
+    } catch (e) {
+      console.warn('Live API fetch failed, falling back to mock data', e);
+    }
+  }
+
+  // Mock Live Data logic
+  const matches = await getAllMatches();
+  const now = new Date();
+  
+  return matches.map(m => {
+    const matchTime = new Date(m.match_date);
+    const diffHours = (now - matchTime) / (1000 * 60 * 60);
+    
+    // Simulate some matches being live right now for demo purposes
+    if (diffHours > 0 && diffHours < 2) {
+      return {
+        ...m,
+        status: 'live',
+        minute: Math.floor((now - matchTime) / (1000 * 60)),
+        stats: {
+          possession_home: 45 + Math.floor(Math.random() * 10),
+          possession_away: 45 + Math.floor(Math.random() * 10),
+          shots_home: Math.floor(Math.random() * 15),
+          shots_away: Math.floor(Math.random() * 12),
+          sot_home: Math.floor(Math.random() * 7),
+          sot_away: Math.floor(Math.random() * 5),
+          corners_home: Math.floor(Math.random() * 8),
+          corners_away: Math.floor(Math.random() * 6),
+        }
+      };
+    }
+    return m;
+  });
+}
+
 export async function getMatchById(id) {
   const matches = await getAllMatches();
   const numId = Number(id);

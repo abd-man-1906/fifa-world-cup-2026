@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Play, MapPin, Calendar, Users, Trophy, Zap, ChevronRight, Star, Sparkles, Globe, Clock } from 'lucide-react';
 import LiveTicker from '../components/LiveTicker';
+import LiveDashboard from '../components/LiveDashboard';
 import MatchCard from '../components/MatchCard';
 import { getAllMatches, getLiveMatches, getNews } from '../api/football';
 
@@ -247,34 +248,14 @@ export default function Home() {
             </motion.span>
           </motion.h1>
 
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="mt-8 text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed"
-          >
-            The greatest show on earth returns. <span className="text-white font-semibold">48 nations.</span>{' '}
-            <span className="text-cyan-400 font-semibold">16 cities.</span> One dream.
-          </motion.p>
-
-          {/* Countdown */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1 }}
-            className="mt-12"
-          >
-            <p className="text-sm font-bold text-gray-500 tracking-widest uppercase mb-4">Kickoff In</p>
-            <CountdownTimer />
-          </motion.div>
+          <LiveDashboard />
 
           {/* CTA Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.2 }}
-            className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-4 mb-20"
           >
             <Link to="/teams">
               <motion.button
