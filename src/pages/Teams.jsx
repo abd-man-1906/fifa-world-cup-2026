@@ -219,12 +219,28 @@ export default function Teams() {
                   transition={{ delay: i * 0.02 }}
                   whileHover={{ y: -5, scale: 1.05 }}
                   onClick={() => setSelectedTeam(team)}
-                  className="group relative aspect-square rounded-2xl bg-white/5 border border-white/10 p-4 flex flex-col items-center justify-center cursor-pointer hover:border-cyan-500/50 hover:bg-white/10 transition-all"
+                  className="group relative aspect-square rounded-2xl bg-white/5 border border-white/10 p-4 flex flex-col items-center justify-center cursor-pointer hover:border-cyan-500/50 hover:bg-white/10 transition-all overflow-hidden"
                 >
-                  <span className="text-4xl mb-3 group-hover:scale-110 transition-transform">{team.flag_icon || '🏳️'}</span>
-                  <span className="text-white font-bold text-center text-sm">{team.name}</span>
-                  <span className="text-xs text-gray-500 mt-1 uppercase tracking-wider">{team.fifa_code}</span>
-                  <div className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center text-[10px] font-black text-cyan-400">
+                  {/* Background Glow */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  
+                  {/* Flag Container */}
+                  <div className="relative mb-3 group-hover:scale-110 transition-transform duration-300">
+                    <span className="text-5xl md:text-6xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+                      {team.flag_icon || '🏳️'}
+                    </span>
+                    {/* Small overlay flag for secondary identification if needed */}
+                  </div>
+
+                  <span className="text-white font-bold text-center text-sm md:text-base group-hover:text-cyan-400 transition-colors line-clamp-1">
+                    {team.name}
+                  </span>
+                  <span className="text-[10px] md:text-xs text-gray-500 mt-1 uppercase tracking-widest font-mono">
+                    {team.fifa_code}
+                  </span>
+
+                  {/* Group Badge */}
+                  <div className="absolute top-3 right-3 w-7 h-7 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center text-[10px] font-black text-cyan-400 shadow-lg">
                     {team.group}
                   </div>
                 </motion.div>

@@ -95,8 +95,24 @@ function findStadium(ground, stadiums) {
       ground.includes(s.city) ||
       s.city.includes(ground.split('(')[0].trim())
   );
-  if (match) return { name: match.name, city: match.city, capacity: match.capacity };
+  if (match) return normalizeStadium(match);
   return { name: ground, city: ground };
+}
+
+function normalizeStadium(s) {
+  const countryMap = {
+    us: 'USA',
+    mx: 'Mexico',
+    ca: 'Canada',
+  };
+
+  return {
+    ...s,
+    id: s.id || s.name.toLowerCase().replace(/\s+/g, '-'),
+    country: s.country || countryMap[s.cc?.toLowerCase()] || 'TBD',
+    opened: s.opened || 'N/A',
+    capacity: s.capacity || 0,
+  };
 }
 
 export function normalizeMatch(raw, index, teamLookup, stadiums) {
@@ -159,8 +175,14 @@ export async function getTeams() {
 }
 
 export async function getStadiums() {
-  const { stadiums } = await fetchAPI();
-  return stadiums.stadiums || [];
+  try {
+    const { stadiums } = await fetchAPI();
+    const list = stadiums.stadiums || [];
+    return list.map(normalizeStadium);
+  } catch (error) {
+    console.error('[Football API] Failed to fetch stadiums:', error);
+    throw error;
+  }
 }
 
 export async function getNews() {

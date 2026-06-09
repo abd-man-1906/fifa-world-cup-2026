@@ -7,15 +7,26 @@ import { getStadiums } from '../api/football';
 export default function Stadiums() {
   const [stadiums, setStadiums] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [hoveredId, setHoveredId] = useState(null);
 
-  useEffect(() => {
+  const loadData = () => {
+    setLoading(true);
+    setError(null);
     getStadiums()
       .then(data => {
         setStadiums(data);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((err) => {
+        console.error('[Stadiums Page] Error loading stadiums:', err);
+        setError('Failed to load stadium data. Please check your connection and try again.');
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    loadData();
   }, []);
 
   return (
@@ -36,7 +47,25 @@ export default function Stadiums() {
 
         {/* Stadiums Grid */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {loading ? (
+          {error ? (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex flex-col items-center justify-center py-20 text-center"
+            >
+              <div className="w-20 h-20 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 mb-6">
+                <X size={40} />
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-2">Oops! Something went wrong</h2>
+              <p className="text-gray-400 mb-8 max-w-md">{error}</p>
+              <button 
+                onClick={loadData}
+                className="px-8 py-3 bg-cyan-500 text-black font-bold rounded-xl hover:bg-cyan-400 transition-colors"
+              >
+                Try Again
+              </button>
+            </motion.div>
+          ) : loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="animate-pulse rounded-3xl bg-white/5 h-80" />
