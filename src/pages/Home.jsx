@@ -174,8 +174,6 @@ export default function Home() {
         <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
 
-      <LiveTicker />
-
       {/* Hero Section */}
       <section ref={heroRef} className="relative min-h-[500px] lg:min-h-screen flex items-start justify-center overflow-hidden pt-20 lg:pt-0">
         {/* Background layers */}
@@ -323,7 +321,7 @@ export default function Home() {
         </motion.div>
       </section>
 
-
+      <LiveTicker />
 
       {/* Today's Matches */}
       <section className="relative py-16 md:py-20 overflow-hidden">

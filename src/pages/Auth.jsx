@@ -25,14 +25,33 @@ export default function Auth() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
           options: {
             data: { full_name: fullName }
           }
         });
-        if (error) throw error;
+        if (signUpError) throw signUpError;
+
+        // Store user information in the profiles table
+        if (signUpData.user) {
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .upsert({
+              id: signUpData.user.id,
+              full_name: fullName,
+              email: email,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            });
+          
+          if (profileError) {
+            console.error('Error creating profile:', profileError);
+            // We don't throw here as the user is still signed up
+          }
+        }
+        
         alert('Check your email for the confirmation link!');
       }
       navigate('/profile');
