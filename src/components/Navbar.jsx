@@ -103,21 +103,21 @@ export default function Navbar() {
               </div>
             </Link>
 
-            {/* Desktop Navigation - Improved responsiveness */}
-            <div className="hidden xl:flex items-center gap-1 overflow-hidden">
+            {/* Desktop Navigation - Scrollable and more compact */}
+            <div className="hidden xl:flex items-center gap-0.5 overflow-x-auto scrollbar-hide px-2">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`relative px-2 2xl:px-3 py-2 rounded-xl text-sm font-bold transition-all group flex items-center gap-2 whitespace-nowrap ${
+                  className={`relative px-2 2xl:px-3 py-2 rounded-xl text-[13px] font-bold transition-all group flex items-center gap-1.5 whitespace-nowrap ${
                     location.pathname === link.path
                       ? 'text-white'
                       : 'text-gray-400 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  <span className="text-lg">{link.icon}</span>
+                  <span className="text-base">{link.icon}</span>
                   <span className="hidden 2xl:inline">{link.label}</span>
-                  <span className="xl:inline 2xl:hidden">{link.label.slice(0, 8)}</span>
+                  <span className="xl:inline 2xl:hidden">{link.label.slice(0, 10)}</span>
                   {location.pathname === link.path && (
                     <motion.div
                       layoutId="nav-active"
