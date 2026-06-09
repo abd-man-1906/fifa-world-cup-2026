@@ -31,7 +31,6 @@ import Privacy from './pages/Privacy';
 import Contact from './pages/Contact';
 import Auth from './pages/Auth';
 import Profile from './pages/Profile';
-import FanZone from './pages/FanZone';
 
 function ScrollToTop() {
   useEffect(() => {

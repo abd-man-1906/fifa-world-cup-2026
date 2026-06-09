@@ -27,7 +27,7 @@ export default function Privacy() {
               <section>
                 <h2 className="text-white font-bold text-lg mb-2">Data Storage</h2>
                 <p>
-                  Match data is loaded from public JSON datasets. No account registration is required to use this site.
+                  User profile data is stored securely using Supabase. You can delete your account at any time by contacting our support team.
                 </p>
               </section>
               <section>
