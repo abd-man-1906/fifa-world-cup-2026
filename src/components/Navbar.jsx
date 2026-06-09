@@ -74,9 +74,9 @@ export default function Navbar() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 md:h-20">
+          <div className="flex items-center justify-between h-16 md:h-20 gap-4">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-3 group">
+            <Link to="/" className="flex items-center gap-3 group flex-shrink-0">
               <motion.div
                 whileHover={{ rotate: 360, scale: 1.1 }}
                 transition={{ duration: 0.5 }}
@@ -103,21 +103,21 @@ export default function Navbar() {
               </div>
             </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden xl:flex items-center gap-1">
+            {/* Desktop Navigation - Improved responsiveness */}
+            <div className="hidden xl:flex items-center gap-1 overflow-hidden">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`relative px-3 py-2 rounded-xl text-sm font-bold transition-all group flex items-center gap-2 ${
+                  className={`relative px-2 2xl:px-3 py-2 rounded-xl text-sm font-bold transition-all group flex items-center gap-2 whitespace-nowrap ${
                     location.pathname === link.path
                       ? 'text-white'
                       : 'text-gray-400 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  <span>{link.icon}</span>
+                  <span className="text-lg">{link.icon}</span>
                   <span className="hidden 2xl:inline">{link.label}</span>
-                  <span className="xl:inline 2xl:hidden">{link.label.slice(0, 10)}</span>
+                  <span className="xl:inline 2xl:hidden">{link.label.slice(0, 8)}</span>
                   {location.pathname === link.path && (
                     <motion.div
                       layoutId="nav-active"
@@ -128,33 +128,33 @@ export default function Navbar() {
               ))}
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all flex items-center gap-3 px-4"
+                className="p-2 md:p-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2 md:gap-3 px-3 md:px-4"
               >
                 <Search size={20} />
-                <span className="hidden sm:inline text-xs font-bold uppercase tracking-widest">Search</span>
-                <span className="hidden md:inline px-1.5 py-0.5 rounded bg-white/10 border border-white/10 text-[10px] opacity-50">⌘K</span>
+                <span className="hidden lg:inline text-xs font-bold uppercase tracking-widest">Search</span>
+                <span className="hidden xl:inline px-1.5 py-0.5 rounded bg-white/10 border border-white/10 text-[10px] opacity-50">⌘K</span>
               </button>
 
               <button
                 onClick={toggleTheme}
-                className="hidden sm:flex p-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                className="hidden md:flex p-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all"
               >
                 {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
               </button>
 
               <Link
                 to={user ? "/profile" : "/login"}
-                className={`p-2.5 rounded-xl border transition-all flex items-center gap-2 px-4 ${
+                className={`p-2 md:p-2.5 rounded-xl border transition-all flex items-center gap-2 px-3 md:px-4 ${
                   user 
                     ? 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400 hover:bg-cyan-500/20' 
                     : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:bg-white/10'
                 }`}
               >
                 <User size={20} />
-                <span className="hidden md:inline text-xs font-bold uppercase tracking-widest">
+                <span className="hidden lg:inline text-xs font-bold uppercase tracking-widest">
                   {user ? "Profile" : "Sign In"}
                 </span>
               </Link>
