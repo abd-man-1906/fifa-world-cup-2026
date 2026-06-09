@@ -16,7 +16,6 @@ const navLinks = [
   { path: '/fan-zone', label: 'Fan Zone', icon: '🎉' },
   { path: '/history', label: 'History', icon: '📜' },
   { path: '/news', label: 'News', icon: '📰' },
-  { path: '/tickets', label: 'Tickets', icon: '🎫' },
 ];
 
 export default function Navbar() {

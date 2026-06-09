@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Star, TrendingUp, Target, Shield, Zap, Award } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
+import { getPlayers } from '../api/football';
 
 function SkillBar({ label, value, color = 'cyan' }) {
   return (
@@ -115,8 +116,7 @@ export default function Players() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/players?featured=true')
-      .then(res => res.json())
+    getPlayers()
       .then(data => {
         setPlayers(data);
         setLoading(false);

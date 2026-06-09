@@ -8,7 +8,6 @@ const footerLinks = {
     { label: 'Host Cities', href: '/stadiums' },
     { label: 'Stadiums', href: '/stadiums' },
     { label: 'Match Schedule', href: '/matches' },
-    { label: 'Tickets', href: '/tickets' },
   ],
   teams: [
     { label: 'All Teams', href: '/teams' },

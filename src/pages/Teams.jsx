@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, X, Star, MapPin, User, Trophy, ChevronDown } from 'lucide-react';
+import { Search, Filter, X, Star, User, Trophy, ChevronDown } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
+import { getTeams } from '../api/football';
 
 const continents = ['All', 'Europe', 'South America', 'Africa', 'Asia', 'North America', 'Oceania'];
 const groups = ['All', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
@@ -35,7 +36,7 @@ function TeamModal({ team, onClose }) {
           </button>
           <div className="absolute -bottom-12 left-8">
             <div className="w-24 h-24 rounded-2xl bg-white/10 backdrop-blur-md border-2 border-white/20 flex items-center justify-center text-5xl shadow-2xl">
-              {team.flag}
+              {team.flag_icon || '🏳️'}
             </div>
           </div>
         </div>
@@ -44,11 +45,11 @@ function TeamModal({ team, onClose }) {
           <div className="flex items-start justify-between mb-6">
             <div>
               <h2 className="text-3xl font-black text-white">{team.name}</h2>
-              <p className="text-gray-400 mt-1">Group {team.group_letter} • {team.continent}</p>
+              <p className="text-gray-400 mt-1">Group {team.group} • {team.continent}</p>
             </div>
             <div className="text-right">
-              <span className="text-4xl font-black text-cyan-400">#{team.ranking}</span>
-              <p className="text-xs text-gray-500 uppercase tracking-wider">FIFA Rank</p>
+              <span className="text-4xl font-black text-cyan-400">{team.fifa_code}</span>
+              <p className="text-xs text-gray-500 uppercase tracking-wider">FIFA Code</p>
             </div>
           </div>
           
@@ -56,26 +57,22 @@ function TeamModal({ team, onClose }) {
             <div className="p-4 rounded-xl bg-white/5 border border-white/10">
               <User size={18} className="text-cyan-400 mb-2" />
               <p className="text-xs text-gray-500 uppercase">Coach</p>
-              <p className="text-white font-semibold">{team.coach}</p>
+              <p className="text-white font-semibold">{team.coach || 'TBD'}</p>
             </div>
             <div className="p-4 rounded-xl bg-white/5 border border-white/10">
               <Trophy size={18} className="text-yellow-400 mb-2" />
-              <p className="text-xs text-gray-500 uppercase">World Cups Won</p>
-              <p className="text-white font-semibold">{team.world_cups_won || 0}</p>
+              <p className="text-xs text-gray-500 uppercase">Confederation</p>
+              <p className="text-white font-semibold">{team.confed || 'TBD'}</p>
             </div>
           </div>
           
           <div className="mb-6">
             <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-              <Star size={16} className="text-yellow-400" /> Key Players
+              <Star size={16} className="text-yellow-400" /> Information
             </h3>
-          <div className="flex flex-wrap gap-2">
-            {(team.star_players || []).map((player) => (
-              <span key={player} className="px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-sm font-medium">
-                {player}
-              </span>
-            ))}
-          </div>
+            <p className="text-gray-400 text-sm">
+              {team.name} has qualified for the FIFA World Cup 2026 and will compete in Group {team.group}.
+            </p>
           </div>
           
           <div className="p-4 rounded-xl bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20">
@@ -97,8 +94,7 @@ export default function Teams() {
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
-    fetch('/api/teams')
-      .then(res => res.json())
+    getTeams()
       .then(data => {
         setTeams(data);
         setLoading(false);
@@ -109,7 +105,7 @@ export default function Teams() {
   const filteredTeams = teams.filter(team => {
     const matchesSearch = team.name.toLowerCase().includes(search.toLowerCase());
     const matchesContinent = selectedContinent === 'All' || team.continent === selectedContinent;
-    const matchesGroup = selectedGroup === 'All' || team.group_letter === selectedGroup;
+    const matchesGroup = selectedGroup === 'All' || team.group === selectedGroup;
     return matchesSearch && matchesContinent && matchesGroup;
   });
 
@@ -199,7 +195,7 @@ export default function Teams() {
                                 : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
                             }`}
                           >
-                            Group {g}
+                            {g}
                           </button>
                         ))}
                       </div>
@@ -214,75 +210,36 @@ export default function Teams() {
         {/* Teams Grid */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {[...Array(12)].map((_, i) => (
-                <div key={i} className="animate-pulse rounded-2xl bg-white/5 h-64" />
+                <div key={i} className="animate-pulse rounded-2xl bg-white/5 aspect-square" />
               ))}
             </div>
-          ) : filteredTeams.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-gray-500 text-xl">No teams found matching your criteria.</p>
-            </div>
           ) : (
-            <motion.div layout className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-              <AnimatePresence mode="popLayout">
-                {filteredTeams.map((team, i) => (
-                  <motion.div
-                    key={team.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ delay: i * 0.03 }}
-                    whileHover={{ y: -8, scale: 1.02 }}
-                    onClick={() => setSelectedTeam(team)}
-                    className={`group cursor-pointer relative rounded-2xl overflow-hidden border transition-all duration-300 ${
-                      team.gradient ? `bg-gradient-to-b ${team.gradient}` : 'bg-gradient-to-b from-gray-800 to-gray-900'
-                    } border-white/10 hover:border-cyan-500/50`}
-                  >
-                    {/* Glow effect */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    
-                    <div className="relative p-6">
-                      {/* Flag & Ranking */}
-                      <div className="flex items-start justify-between mb-4">
-                        <motion.span
-                          whileHover={{ scale: 1.2, rotate: [0, -10, 10, 0] }}
-                          className="text-5xl block drop-shadow-lg"
-                        >
-                          {team.flag}
-                        </motion.span>
-                        <span className="px-2.5 py-1 rounded-lg bg-black/40 backdrop-blur-sm text-xs font-bold text-cyan-400">
-                          #{team.ranking}
-                        </span>
-                      </div>
-                      
-                      {/* Team Info */}
-                      <h3 className="text-lg font-bold text-white mb-1">{team.name}</h3>
-                      <p className="text-gray-400 text-sm mb-3">{team.continent}</p>
-                      
-                      <div className="flex items-center justify-between">
-                        <span className="px-2.5 py-1 rounded-lg bg-white/10 text-xs font-bold text-white">
-                          Group {team.group_letter}
-                        </span>
-                        <span className="text-xs text-gray-500 flex items-center gap-1">
-                          <User size={12} /> {team.coach?.split(' ')[0]}
-                        </span>
-                      </div>
-                      
-                      {/* Hover arrow */}
-                      <div className="absolute bottom-4 right-4 w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
-                        <ChevronDown size={16} className="text-cyan-400 rotate[-90deg]" />
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </motion.div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {filteredTeams.map((team, i) => (
+                <motion.div
+                  key={team.name}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: i * 0.02 }}
+                  whileHover={{ y: -5, scale: 1.05 }}
+                  onClick={() => setSelectedTeam(team)}
+                  className="group relative aspect-square rounded-2xl bg-white/5 border border-white/10 p-4 flex flex-col items-center justify-center cursor-pointer hover:border-cyan-500/50 hover:bg-white/10 transition-all"
+                >
+                  <span className="text-4xl mb-3 group-hover:scale-110 transition-transform">{team.flag_icon || '🏳️'}</span>
+                  <span className="text-white font-bold text-center text-sm">{team.name}</span>
+                  <span className="text-xs text-gray-500 mt-1 uppercase tracking-wider">{team.fifa_code}</span>
+                  <div className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-black/50 border border-white/10 flex items-center justify-center text-[10px] font-black text-cyan-400">
+                    {team.group}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           )}
         </div>
 
-        {/* Team Modal */}
+        {/* Modal */}
         <AnimatePresence>
           {selectedTeam && (
             <TeamModal team={selectedTeam} onClose={() => setSelectedTeam(null)} />

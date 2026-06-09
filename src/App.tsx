@@ -20,7 +20,6 @@ import LiveScores from './pages/LiveScores';
 import FanZone from './pages/FanZone';
 import History from './pages/History';
 import News from './pages/News';
-import Tickets from './pages/Tickets';
 import Standings from './pages/Standings';
 import Bracket from './pages/Bracket';
 import MatchDetail from './pages/MatchDetail';
@@ -57,7 +56,6 @@ export default function App() {
                 <Route path="/fan-zone" element={<><ScrollToTop /><PageTransition><FanZone /></PageTransition></>} />
                 <Route path="/history" element={<><ScrollToTop /><PageTransition><History /></PageTransition></>} />
                 <Route path="/news" element={<><ScrollToTop /><PageTransition><News /></PageTransition></>} />
-                <Route path="/tickets" element={<><ScrollToTop /><PageTransition><Tickets /></PageTransition></>} />
                 <Route path="/standings" element={<><ScrollToTop /><PageTransition><Standings /></PageTransition></>} />
                 <Route path="/bracket" element={<><ScrollToTop /><PageTransition><Bracket /></PageTransition></>} />
                 <Route path="/match/:id" element={<><ScrollToTop /><PageTransition><MatchDetail /></PageTransition></>} />

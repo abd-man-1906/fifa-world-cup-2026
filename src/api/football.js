@@ -156,6 +156,111 @@ export async function getTeams() {
   return teams;
 }
 
+export async function getPlayers() {
+  const { teams } = await fetchAPI();
+  // Generate mock featured players from teams if needed, 
+  // but for now we'll just return an empty list or some hardcoded ones if preferred.
+  // Given the PlayerCard needs specific stats, let's provide some high-quality mocks.
+  return [
+    {
+      id: 1,
+      name: 'Lionel Messi',
+      position: 'Forward',
+      rating: 94,
+      number: 10,
+      is_featured: true,
+      pace: 89,
+      shooting: 92,
+      passing: 94,
+      defense: 40,
+      goals: 800,
+      assists: 350,
+      trophies: 44,
+      team: teams.find(t => t.name === 'Argentina') || { name: 'Argentina', flag: '🇦🇷' }
+    },
+    {
+      id: 2,
+      name: 'Kylian Mbappé',
+      position: 'Forward',
+      rating: 92,
+      number: 7,
+      is_featured: true,
+      pace: 97,
+      shooting: 89,
+      passing: 80,
+      defense: 38,
+      goals: 300,
+      assists: 120,
+      trophies: 15,
+      team: teams.find(t => t.name === 'France') || { name: 'France', flag: '🇫🇷' }
+    },
+    {
+      id: 3,
+      name: 'Erling Haaland',
+      position: 'Forward',
+      rating: 91,
+      number: 9,
+      is_featured: true,
+      pace: 89,
+      shooting: 93,
+      passing: 66,
+      defense: 45,
+      goals: 250,
+      assists: 50,
+      trophies: 10,
+      team: teams.find(t => t.name === 'Norway') || { name: 'Norway', flag: '🇳🇴' }
+    },
+    {
+      id: 4,
+      name: 'Kevin De Bruyne',
+      position: 'Midfielder',
+      rating: 91,
+      number: 17,
+      is_featured: true,
+      pace: 74,
+      shooting: 86,
+      passing: 95,
+      defense: 63,
+      goals: 150,
+      assists: 280,
+      trophies: 20,
+      team: teams.find(t => t.name === 'Belgium') || { name: 'Belgium', flag: '🇧🇪' }
+    },
+    {
+      id: 5,
+      name: 'Jude Bellingham',
+      position: 'Midfielder',
+      rating: 88,
+      number: 5,
+      is_featured: true,
+      pace: 82,
+      shooting: 78,
+      passing: 85,
+      defense: 78,
+      goals: 50,
+      assists: 40,
+      trophies: 5,
+      team: teams.find(t => t.name === 'England') || { name: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' }
+    },
+    {
+      id: 6,
+      name: 'Vinícius Júnior',
+      position: 'Forward',
+      rating: 89,
+      number: 7,
+      is_featured: true,
+      pace: 95,
+      shooting: 82,
+      passing: 78,
+      defense: 34,
+      goals: 80,
+      assists: 70,
+      trophies: 12,
+      team: teams.find(t => t.name === 'Brazil') || { name: 'Brazil', flag: '🇧🇷' }
+    }
+  ];
+}
+
 export async function getStandings() {
   const { teams } = await fetchAPI();
   const matches = await getAllMatches();

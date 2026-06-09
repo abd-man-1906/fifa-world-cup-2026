@@ -589,16 +589,16 @@ export default function Home() {
             Ready for the <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Magic?</span>
           </h2>
           <p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
-            Don't miss a moment of the biggest World Cup in history. Get your tickets, follow your team, and be part of something extraordinary.
+            Don't miss a moment of the biggest World Cup in history. Follow your favorite teams, track live scores, and be part of something extraordinary.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/tickets">
+            <Link to="/matches">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-10 py-5 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-2xl font-bold text-black text-lg shadow-lg shadow-yellow-500/25 hover:shadow-yellow-500/40 transition-shadow flex items-center gap-2"
+                className="px-10 py-5 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl font-bold text-white text-lg shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition-shadow flex items-center gap-2"
               >
-                <Trophy size={22} /> Get Tickets Now
+                <Calendar size={22} /> View Schedule
               </motion.button>
             </Link>
             <Link to="/live-scores">
