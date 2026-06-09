@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, X, Star, User, Trophy, ChevronDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Search, Filter, X, Star, User, Trophy, ChevronDown, ArrowRight } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 import { getTeams } from '../api/football';
 
@@ -212,38 +213,47 @@ export default function Teams() {
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {filteredTeams.map((team, i) => (
-                <motion.div
-                  key={team.name}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.02 }}
-                  whileHover={{ y: -5, scale: 1.05 }}
-                  onClick={() => setSelectedTeam(team)}
-                  className="group relative aspect-square rounded-2xl bg-white/5 border border-white/10 p-4 flex flex-col items-center justify-center cursor-pointer hover:border-cyan-500/50 hover:bg-white/10 transition-all overflow-hidden"
+                <Link 
+                  key={team.name} 
+                  to={`/teams/${team.name.toLowerCase().replace(/\s+/g, '-')}`}
                 >
-                  {/* Background Glow */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  
-                  {/* Flag Container */}
-                  <div className="relative mb-3 group-hover:scale-110 transition-transform duration-300">
-                    <span className="text-5xl md:text-6xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
-                      {team.flag_icon || '🏳️'}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: i * 0.02 }}
+                    whileHover={{ y: -5, scale: 1.05 }}
+                    className="group relative aspect-square rounded-2xl bg-white/5 border border-white/10 p-4 flex flex-col items-center justify-center cursor-pointer hover:border-cyan-500/50 hover:bg-white/10 transition-all overflow-hidden"
+                  >
+                    {/* Background Glow */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    
+                    {/* Flag Container */}
+                    <div className="relative mb-3 group-hover:scale-110 transition-transform duration-300">
+                      <span className="text-5xl md:text-6xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+                        {team.flag_icon || '🏳️'}
+                      </span>
+                    </div>
+
+                    <span className="text-white font-bold text-center text-sm md:text-base group-hover:text-cyan-400 transition-colors line-clamp-1">
+                      {team.name}
                     </span>
-                    {/* Small overlay flag for secondary identification if needed */}
-                  </div>
+                    <span className="text-[10px] md:text-xs text-gray-500 mt-1 uppercase tracking-widest font-mono">
+                      {team.fifa_code}
+                    </span>
 
-                  <span className="text-white font-bold text-center text-sm md:text-base group-hover:text-cyan-400 transition-colors line-clamp-1">
-                    {team.name}
-                  </span>
-                  <span className="text-[10px] md:text-xs text-gray-500 mt-1 uppercase tracking-widest font-mono">
-                    {team.fifa_code}
-                  </span>
+                    {/* Group Badge */}
+                    <div className="absolute top-3 right-3 w-7 h-7 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center text-[10px] font-black text-cyan-400 shadow-lg">
+                      {team.group}
+                    </div>
 
-                  {/* Group Badge */}
-                  <div className="absolute top-3 right-3 w-7 h-7 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center text-[10px] font-black text-cyan-400 shadow-lg">
-                    {team.group}
-                  </div>
-                </motion.div>
+                    {/* Hover Info */}
+                    <div className="absolute inset-x-0 bottom-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-t from-black to-transparent">
+                      <div className="flex items-center justify-center gap-1 text-cyan-400 text-[10px] font-bold">
+                        VIEW HUB <ArrowRight size={10} />
+                      </div>
+                    </div>
+                  </motion.div>
+                </Link>
               ))}
             </div>
           )}

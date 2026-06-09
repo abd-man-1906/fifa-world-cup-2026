@@ -13,6 +13,7 @@ import PageTransition from './components/PageTransition';
 // Pages
 import Home from './pages/Home';
 import Teams from './pages/Teams';
+import TeamDetail from './pages/TeamDetail';
 import Matches from './pages/Matches';
 import Stadiums from './pages/Stadiums';
 import Players from './pages/Players';
@@ -50,6 +51,7 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<><ScrollToTop /><PageTransition><Home /></PageTransition></>} />
                 <Route path="/teams" element={<><ScrollToTop /><PageTransition><Teams /></PageTransition></>} />
+                <Route path="/teams/:slug" element={<><ScrollToTop /><PageTransition><TeamDetail /></PageTransition></>} />
                 <Route path="/matches" element={<><ScrollToTop /><PageTransition><Matches /></PageTransition></>} />
                 <Route path="/stadiums" element={<><ScrollToTop /><PageTransition><Stadiums /></PageTransition></>} />
                 <Route path="/players" element={<><ScrollToTop /><PageTransition><Players /></PageTransition></>} />

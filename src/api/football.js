@@ -174,6 +174,16 @@ export async function getTeams() {
   return teams;
 }
 
+export async function getTeamBySlug(slug) {
+  const { teams } = await fetchAPI();
+  return teams.find(t => t.name.toLowerCase().replace(/\s+/g, '-') === slug) || null;
+}
+
+export async function getTeamMatches(teamName) {
+  const matches = await getAllMatches();
+  return matches.filter(m => m.home_team.name === teamName || m.away_team.name === teamName);
+}
+
 export async function getStadiums() {
   try {
     const { stadiums } = await fetchAPI();
