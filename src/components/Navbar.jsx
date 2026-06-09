@@ -75,46 +75,44 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center gap-1">
+          {/* Desktop Navigation */}
+          <div className="hidden xl:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className="relative px-3 xl:px-4 py-2 text-sm font-semibold text-gray-300 hover:text-white transition-colors group"
+                className={`relative px-3 py-2 rounded-xl text-sm font-bold transition-all group flex items-center gap-2 ${
+                  location.pathname === link.path
+                    ? 'text-white'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
               >
-                <span className="relative z-10 flex items-center gap-1.5">
-                  <span className="text-xs">{link.icon}</span>
-                  {link.label}
-                </span>
+                <span>{link.icon}</span>
+                <span className="hidden 2xl:inline">{link.label}</span>
+                <span className="xl:inline 2xl:hidden">{link.label.slice(0, 10)}</span>
                 {location.pathname === link.path && (
                   <motion.div
-                    layoutId="navbar-indicator"
-                    className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-lg border border-cyan-500/30"
-                    transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                    layoutId="nav-active"
+                    className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 rounded-xl -z-10"
                   />
                 )}
-                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-500 group-hover:w-3/4 transition-all duration-300" />
               </Link>
             ))}
           </div>
 
-          {/* Right side */}
-          <div className="flex items-center gap-3">
-            <motion.button
-              whileTap={{ scale: 0.9 }}
+          <div className="flex items-center gap-4">
+            <button
               onClick={toggleTheme}
-              className="p-2 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:text-yellow-400 hover:border-yellow-400/30 transition-all"
+              className="hidden sm:flex p-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all"
             >
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-            </motion.button>
-
-            {/* Mobile menu button */}
+              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+            
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden p-2 rounded-xl bg-white/5 border border-white/10 text-white"
+              className="xl:hidden p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 hover:bg-cyan-500/20 transition-all"
             >
-              {isOpen ? <X size={20} /> : <Menu size={20} />}
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>

@@ -160,7 +160,7 @@ export async function getTeams() {
 
 export async function getStadiums() {
   const { stadiums } = await fetchAPI();
-  return stadiums;
+  return stadiums.stadiums || [];
 }
 
 export async function getNews() {

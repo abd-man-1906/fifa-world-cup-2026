@@ -74,10 +74,10 @@ export default function Stadiums() {
                     style={{ transform: hoveredId === stadium.id ? 'rotate(15deg)' : 'rotate(10deg)', transition: 'transform 0.5s' }}
                   />
                   
-                  <div className="relative p-8 min-h-[320px] flex flex-col justify-between">
+                  <div className="relative p-6 md:p-8 min-h-[280px] md:min-h-[320px] flex flex-col justify-between">
                     <div>
                       {/* Country badge */}
-                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-4 ${
+                      <span className={`inline-block px-3 py-1 rounded-full text-[10px] md:text-xs font-bold mb-3 md:mb-4 ${
                         stadium.country === 'USA' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
                         stadium.country === 'Mexico' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
                         'bg-red-500/20 text-red-400 border border-red-500/30'
@@ -85,32 +85,32 @@ export default function Stadiums() {
                         📍 {stadium.country}
                       </span>
                       
-                      <h3 className="text-2xl md:text-3xl font-black text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                      <h3 className="text-xl md:text-3xl font-black text-white mb-1 md:mb-2 group-hover:text-cyan-400 transition-colors">
                         {stadium.name}
                       </h3>
-                      <div className="flex items-center gap-2 text-gray-400">
-                        <MapPin size={16} className="text-cyan-500" />
+                      <div className="flex items-center gap-2 text-gray-400 text-xs md:text-base">
+                        <MapPin size={14} className="text-cyan-500" />
                         <span>{stadium.city}</span>
                       </div>
                     </div>
                     
-                    <div className="flex items-end justify-between">
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-gray-400 text-sm">
-                          <Users size={16} className="text-cyan-500" />
+                    <div className="flex items-end justify-between mt-4">
+                      <div className="space-y-1 md:space-y-2">
+                        <div className="flex items-center gap-2 text-gray-400 text-[10px] md:text-sm">
+                          <Users size={14} className="text-cyan-500" />
                           <span>{stadium.capacity.toLocaleString()} Capacity</span>
                         </div>
-                        <div className="flex items-center gap-2 text-gray-400 text-sm">
-                          <Building2 size={16} className="text-cyan-500" />
+                        <div className="flex items-center gap-2 text-gray-400 text-[10px] md:text-sm">
+                          <Building2 size={14} className="text-cyan-500" />
                           <span>Opened {stadium.opened}</span>
                         </div>
                       </div>
                       
                       <motion.div
                         whileHover={{ scale: 1.1 }}
-                        className="w-12 h-12 rounded-xl bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center group-hover:bg-cyan-500/30 transition-colors"
+                        className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center group-hover:bg-cyan-500/30 transition-colors"
                       >
-                        <ArrowUpRight size={20} className="text-cyan-400" />
+                        <ArrowUpRight size={18} className="text-cyan-400" />
                       </motion.div>
                     </div>
                   </div>
