@@ -24,9 +24,21 @@ export default function Profile() {
       navigate('/login');
     } else {
       setUser(user);
-      // In a real app, fetch fav team from user_metadata or a separate profiles table
-      const savedTeam = localStorage.getItem(`fav_team_${user.id}`);
-      if (savedTeam) setFavTeam(JSON.parse(savedTeam));
+      
+      // Fetch profile data including favorite team from Supabase
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('favorite_team')
+        .eq('id', user.id)
+        .single();
+      
+      if (data?.favorite_team) {
+        setFavTeam(data.favorite_team);
+      } else {
+        // Fallback to localStorage if database is empty
+        const savedTeam = localStorage.getItem(`fav_team_${user.id}`);
+        if (savedTeam) setFavTeam(JSON.parse(savedTeam));
+      }
     }
     setLoading(false);
   }
@@ -36,10 +48,16 @@ export default function Profile() {
     navigate('/login');
   }
 
-  function handleSelectFavTeam(team) {
+  async function handleSelectFavTeam(team) {
     setFavTeam(team);
     if (user) {
       localStorage.setItem(`fav_team_${user.id}`, JSON.stringify(team));
+      
+      // Save to Supabase database
+      await supabase
+        .from('profiles')
+        .update({ favorite_team: team })
+        .eq('id', user.id);
     }
   }
 

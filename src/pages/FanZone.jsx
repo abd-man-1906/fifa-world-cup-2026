@@ -1,17 +1,23 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Star, Target, Users, Zap, Shield, ChevronRight, MessageSquare, Heart } from 'lucide-react';
+import { Trophy, Star, Target, Users, Zap, Shield, ChevronRight, MessageSquare, Heart, Lock } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
 import { getLiveMatches } from '../api/football';
 import supabase from '../lib/supabase';
 
-function PredictorCard({ match, onPredict }) {
+function PredictorCard({ match, onPredict, user }) {
   const [homeScore, setHomeScore] = useState('');
   const [awayScore, setAwayScore] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!user) {
+      navigate('/login');
+      return;
+    }
     if (homeScore === '' || awayScore === '') return;
     onPredict(match.id, parseInt(homeScore), parseInt(awayScore));
     setSubmitted(true);
@@ -22,6 +28,18 @@ function PredictorCard({ match, onPredict }) {
       whileHover={{ y: -5 }}
       className="bg-white/5 border border-white/10 rounded-3xl p-6 relative overflow-hidden group"
     >
+      {!user && (
+        <div className="absolute inset-0 z-10 bg-black/60 backdrop-blur-[2px] flex flex-col items-center justify-center p-6 text-center opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="w-12 h-12 rounded-2xl bg-cyan-500/20 flex items-center justify-center text-cyan-400 mb-4">
+            <Lock size={24} />
+          </div>
+          <p className="text-white font-black text-sm uppercase tracking-widest mb-4">Sign In to Save Predictions</p>
+          <Link to="/login" className="px-6 py-2 rounded-xl bg-cyan-500 text-black font-bold text-xs uppercase tracking-widest hover:scale-105 transition-all">
+            Join Hub
+          </Link>
+        </div>
+      )}
+
       <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
         <Target size={100} />
       </div>
@@ -34,12 +52,12 @@ function PredictorCard({ match, onPredict }) {
       <div className="flex items-center justify-between gap-4 mb-8">
         <div className="flex flex-col items-center gap-2 flex-1">
           <span className="text-4xl">{match.home_team.flag}</span>
-          <span className="text-xs font-black text-white uppercase text-center">{match.home_team.name}</span>
+          <span className="text-xs font-black text-white uppercase text-center line-clamp-1">{match.home_team.name}</span>
         </div>
         <div className="text-2xl font-black text-white/20">VS</div>
         <div className="flex flex-col items-center gap-2 flex-1">
           <span className="text-4xl">{match.away_team.flag}</span>
-          <span className="text-xs font-black text-white uppercase text-center">{match.away_team.name}</span>
+          <span className="text-xs font-black text-white uppercase text-center line-clamp-1">{match.away_team.name}</span>
         </div>
       </div>
 
@@ -73,7 +91,7 @@ function PredictorCard({ match, onPredict }) {
             type="submit"
             className="w-full py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-black rounded-2xl shadow-lg shadow-cyan-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
           >
-            LOCK PREDICTION
+            {user ? 'LOCK PREDICTION' : 'SIGN IN TO LOCK'}
           </button>
         </form>
       )}
@@ -161,7 +179,7 @@ export default function FanZone() {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {upcomingMatches.map(match => (
-                      <PredictorCard key={match.id} match={match} onPredict={handlePredict} />
+                      <PredictorCard key={match.id} match={match} onPredict={handlePredict} user={user} />
                     ))}
                   </div>
                 )}

@@ -119,9 +119,9 @@ function AnimatedStat({ value, label, suffix = '' }) {
 
 const features = [
   { icon: Globe, title: '3 Host Nations', desc: 'USA · Canada · Mexico united for the first time', color: 'from-green-500 to-emerald-600' },
-  { icon: MapPin, title: '16 Host Cities', desc: 'From Vancouver to Mexico City, coast to coast', color: 'from-blue-500 to-cyan-500' },
-  { icon: Users, title: '48 Teams', desc: 'Biggest World Cup ever with expanded format', color: 'from-purple-500 to-pink-500' },
-  { icon: Calendar, title: '104 Matches', desc: '39 days of pure football magic', color: 'from-orange-500 to-red-500' },
+  { icon: MapPin, title: '16 Host Cities', desc: 'From Vancouver to Mexico City, coast to coast', color: 'from-blue-500 to-cyan-500', link: '/stadiums' },
+  { icon: Users, title: '48 Teams', desc: 'Biggest World Cup ever with expanded format', color: 'from-purple-500 to-pink-500', link: '/teams' },
+  { icon: Calendar, title: '104 Matches', desc: '39 days of pure football magic', color: 'from-orange-500 to-red-500', link: '/matches' },
   { icon: Trophy, title: '$1.1 Billion', desc: 'Record prize money for participating teams', color: 'from-yellow-500 to-orange-500' },
   { icon: Zap, title: '5.5M Fans', desc: 'Expected attendance across all stadiums', color: 'from-cyan-400 to-blue-600' },
 ];
@@ -377,24 +377,35 @@ export default function Home() {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((feature, i) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -8, scale: 1.02 }}
-                className="group relative p-8 rounded-3xl bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/10 backdrop-blur-sm hover:border-cyan-500/30 transition-all duration-500"
-              >
-                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-6 shadow-lg`}>
-                  <feature.icon size={26} className="text-white" />
+            {features.map((feature, i) => {
+              const CardContent = (
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  className={`group relative p-8 rounded-3xl bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/10 backdrop-blur-sm hover:border-cyan-500/30 transition-all duration-500 h-full ${feature.link ? 'cursor-pointer' : ''}`}
+                >
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-6 shadow-lg`}>
+                    <feature.icon size={26} className="text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
+                  <p className="text-gray-400 leading-relaxed">{feature.desc}</p>
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                </motion.div>
+              );
+
+              return feature.link ? (
+                <Link to={feature.link} key={feature.title} className="block h-full">
+                  {CardContent}
+                </Link>
+              ) : (
+                <div key={feature.title} className="block h-full">
+                  {CardContent}
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
-                <p className="text-gray-400 leading-relaxed">{feature.desc}</p>
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-              </motion.div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

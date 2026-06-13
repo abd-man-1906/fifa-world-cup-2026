@@ -163,30 +163,96 @@ export async function getLiveMatches() {
     .slice(0, 6);
 }
 
+function mapApiFootballStats(statsArray) {
+  if (!statsArray || statsArray.length !== 2) return null;
+  const home = statsArray[0].statistics;
+  const away = statsArray[1].statistics;
+  const getStat = (arr, type) => {
+    const s = arr.find((x) => x.type === type);
+    if (!s || s.value === null) return 0;
+    if (typeof s.value === 'string' && s.value.includes('%')) return parseInt(s.value);
+    return s.value;
+  };
+  return {
+    possession_home: getStat(home, 'Ball Possession'),
+    possession_away: getStat(away, 'Ball Possession'),
+    shots_home: getStat(home, 'Total Shots'),
+    shots_away: getStat(away, 'Total Shots'),
+    sot_home: getStat(home, 'Shots on Goal'),
+    sot_away: getStat(away, 'Shots on Goal'),
+    corners_home: getStat(home, 'Corner Kicks'),
+    corners_away: getStat(away, 'Corner Kicks'),
+  };
+}
+
+function mapApiFootballMatch(apiMatch) {
+  return {
+    id: apiMatch.fixture.id,
+    num: apiMatch.fixture.id,
+    home_team: { name: apiMatch.teams.home.name, flag: '⚽', logo: apiMatch.teams.home.logo },
+    away_team: { name: apiMatch.teams.away.name, flag: '⚽', logo: apiMatch.teams.away.logo },
+    stadium: { name: apiMatch.fixture.venue.name || 'Stadium', city: apiMatch.fixture.venue.city || '' },
+    match_date: apiMatch.fixture.date,
+    stage: apiMatch.league.round || 'group',
+    round: apiMatch.league.round,
+    status: apiMatch.fixture.status.short === 'FT' ? 'completed' : ['1H', '2H', 'HT', 'ET', 'P', 'LIVE'].includes(apiMatch.fixture.status.short) ? 'live' : 'upcoming',
+    minute: apiMatch.fixture.status.elapsed,
+    home_score: apiMatch.goals.home,
+    away_score: apiMatch.goals.away,
+    events: apiMatch.events || [],
+    stats: mapApiFootballStats(apiMatch.statistics) || null,
+    goals1: (apiMatch.events || []).filter(e => e.type === 'Goal' && e.team.id === apiMatch.teams.home.id).map(e => ({ min: e.time.elapsed, scorer: e.player.name })),
+    goals2: (apiMatch.events || []).filter(e => e.type === 'Goal' && e.team.id === apiMatch.teams.away.id).map(e => ({ min: e.time.elapsed, scorer: e.player.name }))
+  };
+}
+
 export async function getLiveScores() {
-  const apiKey = import.meta.env.VITE_FOOTBALL_API_KEY;
+  const apiKey = import.meta.env.VITE_API_FOOTBALL_KEY;
   
-  // If API key exists, we could fetch from a real service like football-data.org
   if (apiKey) {
     try {
-      // Example implementation for football-data.org
-      // const res = await fetch('https://api.football-data.org/v4/matches', {
-      //   headers: { 'X-Auth-Token': apiKey }
-      // });
-      // return await res.json();
+      const res = await fetch('https://v3.football.api-sports.io/fixtures?live=all', {
+        headers: {
+          'x-apisports-key': apiKey,
+          'x-rapidapi-key': apiKey
+        }
+      });
+      const data = await res.json();
+      if (data.response && data.response.length > 0) {
+        return data.response.map(mapApiFootballMatch);
+      }
     } catch (e) {
       console.warn('Live API fetch failed, falling back to static data', e);
     }
   }
 
-  // Return all matches with their static status (upcoming)
+  // Return all matches with their static status
   const matches = await getAllMatches();
   return matches;
 }
 
 export async function getMatchById(id) {
-  const matches = await getAllMatches();
   const numId = Number(id);
+  const apiKey = import.meta.env.VITE_API_FOOTBALL_KEY;
+  
+  if (apiKey && numId > 1000) { // API-Football IDs are usually very large, static are 1-104
+    try {
+      const res = await fetch(`https://v3.football.api-sports.io/fixtures?id=${id}`, {
+        headers: {
+          'x-apisports-key': apiKey,
+          'x-rapidapi-key': apiKey
+        }
+      });
+      const data = await res.json();
+      if (data.response && data.response.length > 0) {
+        return mapApiFootballMatch(data.response[0]);
+      }
+    } catch (e) {
+      console.warn('API Match fetch failed', e);
+    }
+  }
+
+  const matches = await getAllMatches();
   return matches.find((m) => m.id === numId || m.num === numId) || null;
 }
 

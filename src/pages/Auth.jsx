@@ -36,23 +36,26 @@ export default function Auth() {
 
         // Store user information in the profiles table
         if (signUpData.user) {
-          const { error: profileError } = await supabase
-            .from('profiles')
-            .upsert({
-              id: signUpData.user.id,
-              full_name: fullName,
-              email: email,
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString()
-            });
-          
-          if (profileError) {
-            console.error('Error creating profile:', profileError);
-            // We don't throw here as the user is still signed up
+          try {
+            const { error: profileError } = await supabase
+              .from('profiles')
+              .upsert({
+                id: signUpData.user.id,
+                full_name: fullName,
+                email: email,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+              });
+            
+            if (profileError) {
+              console.error('Error creating profile (did you run the SQL script?):', profileError);
+            }
+          } catch (e) {
+            console.error('Database connection failed:', e);
           }
         }
         
-        alert('Check your email for the confirmation link!');
+        alert('Account created! Please check your email for a confirmation link (or check your Supabase settings to disable email confirmation).');
       }
       navigate('/profile');
     } catch (err) {

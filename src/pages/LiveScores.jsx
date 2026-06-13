@@ -61,6 +61,9 @@ function MatchStats({ stats }) {
 function LiveMatchCard({ match }) {
   const [expanded, setExpanded] = useState(false);
   
+  const homeRedCards = (match.events || []).filter(e => e.type === 'Card' && e.detail.includes('Red') && (e.team.name === match.home_team?.name || e.team.id === match.home_team?.id)).length;
+  const awayRedCards = (match.events || []).filter(e => e.type === 'Card' && e.detail.includes('Red') && (e.team.name === match.away_team?.name || e.team.id === match.away_team?.id)).length;
+  
   return (
     <motion.div
       whileHover={{ y: -2 }}
@@ -98,9 +101,16 @@ function LiveMatchCard({ match }) {
         <div className="flex items-center justify-between">
           {/* Home */}
           <div className="flex items-center gap-3 flex-1">
-            <span className="text-3xl">{match.home_team?.flag || '🏳️'}</span>
+            {match.home_team?.logo ? (
+              <img src={match.home_team.logo} alt={match.home_team.name} className="w-8 h-8 md:w-10 md:h-10 object-contain bg-white/10 rounded-full p-1" />
+            ) : (
+              <span className="text-3xl">{match.home_team?.flag || '🏳️'}</span>
+            )}
             <div>
-              <p className="font-bold text-white">{match.home_team?.name || 'TBD'}</p>
+              <div className="flex items-center gap-2">
+                <p className="font-bold text-white">{match.home_team?.name || 'TBD'}</p>
+                {homeRedCards > 0 && [...Array(homeRedCards)].map((_, i) => <div key={i} className="w-2 h-3 bg-red-600 rounded-[1px] shadow-sm" title="Red Card" />)}
+              </div>
               <p className="text-xs text-gray-500">Home</p>
             </div>
           </div>
@@ -117,10 +127,17 @@ function LiveMatchCard({ match }) {
           {/* Away */}
           <div className="flex items-center gap-3 flex-1 justify-end">
             <div className="text-right">
-              <p className="font-bold text-white">{match.away_team?.name || 'TBD'}</p>
+              <div className="flex items-center justify-end gap-2">
+                {awayRedCards > 0 && [...Array(awayRedCards)].map((_, i) => <div key={i} className="w-2 h-3 bg-red-600 rounded-[1px] shadow-sm" title="Red Card" />)}
+                <p className="font-bold text-white">{match.away_team?.name || 'TBD'}</p>
+              </div>
               <p className="text-xs text-gray-500">Away</p>
             </div>
-            <span className="text-3xl">{match.away_team?.flag || '🏳️'}</span>
+            {match.away_team?.logo ? (
+              <img src={match.away_team.logo} alt={match.away_team.name} className="w-8 h-8 md:w-10 md:h-10 object-contain bg-white/10 rounded-full p-1" />
+            ) : (
+              <span className="text-3xl">{match.away_team?.flag || '🏳️'}</span>
+            )}
           </div>
         </div>
         
@@ -161,12 +178,37 @@ export default function LiveScores() {
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [filter, setFilter] = useState('all');
+  const [toastMessage, setToastMessage] = useState(null);
+
+  // Helper to check for new goals
+  const checkForGoals = (oldMatches, newMatches) => {
+    if (!oldMatches || oldMatches.length === 0) return;
+    for (const match of newMatches) {
+      if (match.status !== 'live') continue;
+      const oldMatch = oldMatches.find(m => m.id === match.id);
+      if (oldMatch) {
+        const newHomeGoal = (match.home_score || 0) > (oldMatch.home_score || 0);
+        const newAwayGoal = (match.away_score || 0) > (oldMatch.away_score || 0);
+        
+        if (newHomeGoal) {
+          setToastMessage(`GOAL! ${match.home_team.name} scores against ${match.away_team.name}!`);
+          setTimeout(() => setToastMessage(null), 5000);
+        } else if (newAwayGoal) {
+          setToastMessage(`GOAL! ${match.away_team.name} scores against ${match.home_team.name}!`);
+          setTimeout(() => setToastMessage(null), 5000);
+        }
+      }
+    }
+  };
 
   const fetchScores = async (isInitial = false) => {
     if (isInitial) setLoading(true);
     try {
       const data = await getLiveScores();
-      setMatches(data);
+      setMatches(prev => {
+        if (!isInitial) checkForGoals(prev, data);
+        return data;
+      });
       setLastUpdated(new Date());
     } catch (error) {
       console.error('Failed to fetch scores:', error);
@@ -258,6 +300,19 @@ export default function LiveScores() {
           )}
         </div>
       </div>
+
+      {/* Goal Notification Toast */}
+      {toastMessage && (
+        <motion.div
+          initial={{ opacity: 0, y: 50, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 20, scale: 0.9 }}
+          className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 px-6 py-4 rounded-2xl bg-gradient-to-r from-red-600 to-orange-500 text-white font-black shadow-2xl flex items-center gap-3 border border-white/20"
+        >
+          <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+          {toastMessage}
+        </motion.div>
+      )}
     </PageTransition>
   );
 }

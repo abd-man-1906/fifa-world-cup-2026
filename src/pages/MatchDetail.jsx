@@ -97,11 +97,19 @@ export default function MatchDetail() {
   }
 
   const matchDate = new Date(match.match_date);
-  const stats = generatePlaceholderStats(match);
-  const goals = [
-    ...(match.goals1 || []).map((g) => ({ ...g, team: match.home_team?.name })),
-    ...(match.goals2 || []).map((g) => ({ ...g, team: match.away_team?.name })),
-  ];
+  const stats = match.stats || generatePlaceholderStats(match);
+  
+  const events = match.events && match.events.length > 0 ? 
+    match.events.filter(e => e.type === 'Goal' || (e.type === 'Card' && e.detail.includes('Red'))).map(e => ({
+      min: e.time.elapsed + (e.time.extra ? `+${e.time.extra}` : ''),
+      player: e.player.name,
+      team: e.team.name,
+      type: e.type,
+      detail: e.detail
+    })) : [
+      ...(match.goals1 || []).map((g) => ({ ...g, type: 'Goal', player: g.scorer || g.name, team: match.home_team?.name, min: g.minute || g.min })),
+      ...(match.goals2 || []).map((g) => ({ ...g, type: 'Goal', player: g.scorer || g.name, team: match.away_team?.name, min: g.minute || g.min })),
+    ].sort((a, b) => (parseInt(a.min) || 0) - (parseInt(b.min) || 0));
 
   return (
     <PageTransition>
@@ -127,7 +135,11 @@ export default function MatchDetail() {
 
             <div className="flex items-center justify-between gap-4">
               <div className="flex-1 text-center">
-                <span className="text-5xl md:text-6xl block mb-2">{match.home_team?.flag}</span>
+                {match.home_team?.logo ? (
+                  <img src={match.home_team.logo} alt={match.home_team.name} className="w-16 h-16 md:w-20 md:h-20 mx-auto object-contain mb-2 bg-white/10 rounded-full p-2" />
+                ) : (
+                  <span className="text-5xl md:text-6xl block mb-2">{match.home_team?.flag}</span>
+                )}
                 <h2 className="text-lg md:text-xl font-bold text-white">{match.home_team?.name}</h2>
               </div>
               <div className="text-center px-4">
@@ -139,9 +151,16 @@ export default function MatchDetail() {
                 <span className="text-xs text-gray-500 uppercase tracking-wider mt-2 block">
                   {match.round || match.group || match.stage?.replace(/_/g, ' ')}
                 </span>
+                {match.status === 'live' && (
+                  <span className="text-red-400 text-xs font-bold animate-pulse mt-1 block">LIVE {match.minute}'</span>
+                )}
               </div>
               <div className="flex-1 text-center">
-                <span className="text-5xl md:text-6xl block mb-2">{match.away_team?.flag}</span>
+                {match.away_team?.logo ? (
+                  <img src={match.away_team.logo} alt={match.away_team.name} className="w-16 h-16 md:w-20 md:h-20 mx-auto object-contain mb-2 bg-white/10 rounded-full p-2" />
+                ) : (
+                  <span className="text-5xl md:text-6xl block mb-2">{match.away_team?.flag}</span>
+                )}
                 <h2 className="text-lg md:text-xl font-bold text-white">{match.away_team?.name}</h2>
               </div>
             </div>
@@ -154,19 +173,20 @@ export default function MatchDetail() {
               transition={{ delay: 0.1 }}
               className="rounded-2xl bg-white/[0.03] border border-white/10 p-6"
             >
-              <h3 className="font-bold text-white mb-4">Goals Timeline</h3>
-              {goals.length > 0 ? (
+              <h3 className="font-bold text-white mb-4">Match Events</h3>
+              {events.length > 0 ? (
                 <ul className="space-y-2">
-                  {goals.map((g, i) => (
+                  {events.map((e, i) => (
                     <li key={i} className="flex items-center gap-3 text-sm text-gray-300">
-                      <span className="text-cyan-400 font-bold w-8">{g.minute || g.min}&apos;</span>
-                      <span>{g.name || g.scorer}</span>
-                      <span className="text-gray-500">({g.team})</span>
+                      <span className="text-cyan-400 font-bold w-8">{e.min}&apos;</span>
+                      {e.type === 'Goal' ? '⚽' : <div className="w-2 h-3 bg-red-600 rounded-[1px] shadow-sm" title={e.detail} />}
+                      <span>{e.player}</span>
+                      <span className="text-gray-500">({e.team})</span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-gray-500 text-sm">No goals recorded yet.</p>
+                <p className="text-gray-500 text-sm">No major events recorded yet.</p>
               )}
             </motion.div>
 
