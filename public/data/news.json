@@ -1,5 +1,45 @@
 [
   {
+    "id": 24,
+    "slug": "usa-dominates-paraguay-opening-win",
+    "title": "USA Dominates Paraguay 4-1 in Los Angeles",
+    "excerpt": "A sold-out SoFi Stadium witnessed a flawless performance from the USMNT, capped by a stunning Gio Reyna goal.",
+    "content": "The USA kicked off their home World Cup campaign in spectacular fashion, dominating Paraguay 4-1 at a sold-out SoFi Stadium in Los Angeles in front of over 70,000 fans.\n\n### First Half Blitz\nThe USMNT controlled the game from the opening whistle, racing to a 3-0 lead by halftime. Their high-pressing and dynamic wing play completely overwhelmed the South American defense.\n\n### Reyna's Masterpiece\nThe highlight of the night came in stoppage time when Gio Reyna scored a stunning 4th goal to cap off a flawless performance. The young American generation is certainly making a statement.",
+    "category": "match-report",
+    "image_url": "https://images.unsplash.com/photo-1518091043644-c1d445eb9634?q=80&w=2000&auto=format&fit=crop",
+    "published_at": "2026-06-13T09:00:00Z"
+  },
+  {
+    "id": 23,
+    "slug": "canada-draws-bosnia",
+    "title": "Canada Earns First World Cup Home Point vs Bosnia",
+    "excerpt": "Substitute Cyle Larin rescued a 1-1 draw for Canada in Toronto, marking their first-ever World Cup point on home soil.",
+    "content": "Canada secured a historic 1-1 draw against Bosnia and Herzegovina at Toronto Stadium, earning their first-ever World Cup point as co-hosts.\n\n### Early Setback\nThings looked bleak early on when Jovo Lukic opened the scoring for Bosnia in the 21st minute, silencing the enthusiastic home crowd.\n\n### Larin to the Rescue\nThe turning point came in the second half. Substitute Cyle Larin became the hero, equalizing in the 78th minute and rescuing a vital point for Canada in Group B.",
+    "category": "match-report",
+    "image_url": "https://images.unsplash.com/photo-1551958219-acbc608c6377?q=80&w=2000&auto=format&fit=crop",
+    "published_at": "2026-06-12T22:00:00Z"
+  },
+  {
+    "id": 22,
+    "slug": "south-korea-comeback-czechia",
+    "title": "South Korea Completes Dramatic 2-1 Comeback Over Czechia",
+    "excerpt": "Oh Hyeon-gyu scored an 80th-minute winner as South Korea rallied from behind to defeat the Czech Republic.",
+    "content": "South Korea delivered a thrilling 2-1 comeback victory against the Czech Republic at Estadio Akron in Guadalajara, setting the tone for an exciting Group A.\n\n### Czechia Strikes First\nLadislav Krejčí gave the European side the lead with a powerful header in the 59th minute, putting South Korea on the back foot.\n\n### A Moment of Magic\nThe response was swift. Hwang In-beom produced a 'moment of magic' to equalize in the 67th minute. The momentum completely shifted, culminating in Oh Hyeon-gyu scoring the dramatic winner 11 minutes from full time.",
+    "category": "match-report",
+    "image_url": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=2000&auto=format&fit=crop",
+    "published_at": "2026-06-11T23:00:00Z"
+  },
+  {
+    "id": 21,
+    "slug": "mexico-opens-world-cup-win",
+    "title": "Mexico Kicks Off 2026 World Cup with 2-0 Win Over South Africa",
+    "excerpt": "Estadio Azteca erupted as El Tri cruised to an opening day victory against a South African side that saw three red cards.",
+    "content": "The FIFA World Cup 2026 is officially underway! Mexico kicked off the tournament with a convincing 2-0 victory over South Africa at the legendary Estadio Azteca.\n\n### Early Advantage\nJulián Quiñones capitalized on a South African defensive error to score the opening goal just 9 minutes into the match, sending the home crowd into a frenzy.\n\n### Red Card Chaos\nSouth Africa struggled to maintain discipline in the hostile environment, ultimately receiving three red cards (Sithole, Zwane, Montes) and finishing the match with only 8 players. Raúl Jiménez added a header in the 67th minute to seal the 2-0 win.",
+    "category": "match-report",
+    "image_url": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=2000&auto=format&fit=crop",
+    "published_at": "2026-06-11T16:00:00Z"
+  },
+  {
     "id": 1,
     "slug": "fifa-2026-host-cities-guide",
     "title": "FIFA 2026 Host Cities Guide: From Vancouver to Mexico City",
