@@ -2,17 +2,26 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Radio, Users, Trophy, Activity, ArrowRight, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { getLiveScores } from '../api/football';
+import { getLiveScores, getAllMatches } from '../api/football';
 
 export default function LiveDashboard() {
   const [liveMatches, setLiveMatches] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [pulse, setPulse] = useState({ goals: 0, matches: 0, avgGoals: '0.0', attendance: 0 });
 
   useEffect(() => {
     const fetchLive = async () => {
       try {
-        const data = await getLiveScores();
+        const [data, allMatches] = await Promise.all([getLiveScores(), getAllMatches()]);
         setLiveMatches(data.filter(m => m.status === 'live').slice(0, 2));
+
+        // Compute live tournament pulse from completed matches
+        const completed = allMatches.filter(m => m.status === 'completed');
+        const totalGoals = completed.reduce((sum, m) => sum + (m.home_score ?? 0) + (m.away_score ?? 0), 0);
+        const avgGoals = completed.length > 0 ? (totalGoals / completed.length).toFixed(1) : '0.0';
+        // Estimated attendance: average ~65,000 per match
+        const estAttendance = completed.length * 65000;
+        setPulse({ goals: totalGoals, matches: completed.length, avgGoals, attendance: estAttendance });
       } catch (error) {
         console.error('Dashboard fetch failed:', error);
       } finally {
@@ -43,15 +52,33 @@ export default function LiveDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-400 font-bold">Goals Scored</span>
-              <span className="text-xl font-black text-white">12</span>
+              <motion.span
+                key={pulse.goals}
+                initial={{ scale: 1.3, color: '#06b6d4' }}
+                animate={{ scale: 1, color: '#fff' }}
+                className="text-xl font-black text-white"
+              >
+                {pulse.goals}
+              </motion.span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-400 font-bold">Attendance</span>
-              <span className="text-xl font-black text-white">225,482</span>
+              <span className="text-sm text-gray-400 font-bold">Matches Played</span>
+              <span className="text-xl font-black text-white">{pulse.matches}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-400 font-bold">Avg. Goals</span>
-              <span className="text-xl font-black text-white">3.0</span>
+              <span className="text-sm text-gray-400 font-bold">Avg. Goals/Match</span>
+              <motion.span
+                key={pulse.avgGoals}
+                initial={{ scale: 1.3, color: '#06b6d4' }}
+                animate={{ scale: 1, color: '#fff' }}
+                className="text-xl font-black text-white"
+              >
+                {pulse.avgGoals}
+              </motion.span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-400 font-bold">Est. Attendance</span>
+              <span className="text-xl font-black text-white">{pulse.attendance.toLocaleString()}</span>
             </div>
           </div>
         </div>
