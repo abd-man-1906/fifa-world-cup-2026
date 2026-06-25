@@ -95,10 +95,14 @@ export default function PlayerDetail() {
             >
               {/* Profile Image/Placeholder */}
               <div className="relative group">
-                <div className="w-48 h-48 md:w-64 md:h-64 rounded-3xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 flex items-center justify-center overflow-hidden shadow-2xl">
-                  <span className="text-9xl opacity-20 group-hover:scale-110 transition-transform duration-500">👤</span>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <div className="absolute bottom-4 inset-x-0 text-center">
+                <div className="w-48 h-48 md:w-64 md:h-64 rounded-3xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 flex items-center justify-center overflow-hidden shadow-2xl relative">
+                  {player.image_url ? (
+                    <img src={player.image_url} alt={player.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  ) : (
+                    <span className="text-9xl opacity-20 group-hover:scale-110 transition-transform duration-500">👤</span>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+                  <div className="absolute bottom-4 inset-x-0 text-center pointer-events-none">
                     <span className="text-5xl md:text-6xl drop-shadow-lg">{player.team.flag}</span>
                   </div>
                 </div>

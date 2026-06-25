@@ -41,8 +41,12 @@ function PlayerCard({ player, index }) {
 
         <div className="relative z-10">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center text-3xl shadow-lg border border-white/10 group-hover:scale-110 transition-transform">
-              {player.team?.flag}
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center text-3xl shadow-lg border border-white/10 group-hover:scale-110 transition-transform overflow-hidden">
+              {player.image_url ? (
+                <img src={player.image_url} alt={player.name} className="w-full h-full object-cover" />
+              ) : (
+                player.team?.flag
+              )}
             </div>
             <div>
               <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">
