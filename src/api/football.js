@@ -309,6 +309,7 @@ export async function getPlayers() {
       goals: 838,
       assists: 374,
       trophies: 46,
+      image_url: 'https://upload.wikimedia.org/wikipedia/commons/b/b4/Lionel-Messi-Argentina-2022-FIFA-World-Cup_%28cropped%29.jpg',
       team: teams.find(t => t.name === 'Argentina') || { name: 'Argentina', flag: '🇦🇷' }
     },
     {
@@ -325,6 +326,7 @@ export async function getPlayers() {
       goals: 330,
       assists: 130,
       trophies: 17,
+      image_url: 'https://upload.wikimedia.org/wikipedia/commons/b/b3/2022_FIFA_World_Cup_France_4%E2%80%931_Australia_-_%287%29_%28cropped%29.jpg',
       team: teams.find(t => t.name === 'France') || { name: 'France', flag: '🇫🇷' }
     },
     {
@@ -341,6 +343,7 @@ export async function getPlayers() {
       goals: 250,
       assists: 50,
       trophies: 10,
+      image_url: 'https://upload.wikimedia.org/wikipedia/commons/0/07/Erling_Haaland_2023_%28cropped%29.jpg',
       team: teams.find(t => t.name === 'Norway') || { name: 'Norway', flag: '🇳🇴' }
     },
     {
@@ -357,6 +360,7 @@ export async function getPlayers() {
       goals: 150,
       assists: 280,
       trophies: 20,
+      image_url: 'https://upload.wikimedia.org/wikipedia/commons/4/40/Kevin_De_Bruyne_201807091.jpg',
       team: teams.find(t => t.name === 'Belgium') || { name: 'Belgium', flag: '🇧🇪' }
     },
     {
@@ -373,6 +377,7 @@ export async function getPlayers() {
       goals: 79,
       assists: 40,
       trophies: 6,
+      image_url: 'https://upload.wikimedia.org/wikipedia/commons/b/bf/Jude_Bellingham_2022.jpg',
       team: teams.find(t => t.name === 'England') || { name: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' }
     },
     {
@@ -389,6 +394,7 @@ export async function getPlayers() {
       goals: 80,
       assists: 70,
       trophies: 12,
+      image_url: 'https://upload.wikimedia.org/wikipedia/commons/f/f3/Vinicius_Jr_2021.jpg',
       team: teams.find(t => t.name === 'Brazil') || { name: 'Brazil', flag: '🇧🇷' }
     },
     {
@@ -405,6 +411,7 @@ export async function getPlayers() {
       goals: 895,
       assists: 250,
       trophies: 35,
+      image_url: 'https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg',
       team: teams.find(t => t.name === 'Portugal') || { name: 'Portugal', flag: '🇵🇹' }
     },
     {
@@ -421,6 +428,7 @@ export async function getPlayers() {
       goals: 1279,
       assists: 300,
       trophies: 25,
+      image_url: 'https://upload.wikimedia.org/wikipedia/commons/5/54/Pel%C3%A9_1966.jpg',
       team: teams.find(t => t.name === 'Brazil') || { name: 'Brazil', flag: '🇧🇷' }
     },
     {
@@ -437,6 +445,7 @@ export async function getPlayers() {
       goals: 345,
       assists: 200,
       trophies: 12,
+      image_url: 'https://upload.wikimedia.org/wikipedia/commons/2/2c/Maradona-Mundial_86_con_la_copa.JPG',
       team: teams.find(t => t.name === 'Argentina') || { name: 'Argentina', flag: '🇦🇷' }
     },
     {
@@ -453,6 +462,7 @@ export async function getPlayers() {
       goals: 156,
       assists: 130,
       trophies: 15,
+      image_url: 'https://upload.wikimedia.org/wikipedia/commons/f/f3/Zinedine_Zidane_by_F%C4%81r%C4%ABs_S_F%C4%81r%C4%ABs.jpg',
       team: teams.find(t => t.name === 'France') || { name: 'France', flag: '🇫🇷' }
     },
     {
@@ -469,6 +479,7 @@ export async function getPlayers() {
       goals: 299,
       assists: 160,
       trophies: 13,
+      image_url: 'https://upload.wikimedia.org/wikipedia/commons/e/ea/Ronaldinho_2019.jpg',
       team: teams.find(t => t.name === 'Brazil') || { name: 'Brazil', flag: '🇧🇷' }
     }
   ];
