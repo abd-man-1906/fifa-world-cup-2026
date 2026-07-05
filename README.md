@@ -2,6 +2,8 @@
 
 A comprehensive, modern, and interactive hub for the 2026 FIFA World Cup! Built with React, TypeScript, and Vite.
 
+![World Cup 2026 Header](https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?q=80&w=2000&auto=format&fit=crop)
+
 ## ✨ Features
 
 ### 🏆 Tournament Content
@@ -24,6 +26,15 @@ A comprehensive, modern, and interactive hub for the 2026 FIFA World Cup! Built 
 - **Global Search**: Instantly search for teams, players, and news
 - **User Authentication**: Powered by Supabase
 - **Personalization**: Save your favorite team
+
+## 📸 Screenshots
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+  <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800&auto=format&fit=crop" alt="Home Page" style="border-radius: 8px;"/>
+  <img src="https://images.unsplash.com/photo-1551958219-acbc608c6377?q=80&w=800&auto=format&fit=crop" alt="Live Scores" style="border-radius: 8px;"/>
+  <img src="https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?q=80&w=800&auto=format&fit=crop" alt="Standings" style="border-radius: 8px;"/>
+  <img src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=800&auto=format&fit=crop" alt="Fan Zone" style="border-radius: 8px;"/>
+</div>
 
 ## 🚀 Getting Started
 
