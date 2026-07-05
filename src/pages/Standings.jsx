@@ -18,17 +18,17 @@ function GroupTable({ groupName, teams }) {
           {groupName}
         </h3>
       </div>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+      <div className="overflow-x-auto [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent">
+        <table className="w-full min-w-[450px] text-sm">
           <thead>
             <tr className="text-gray-500 text-xs uppercase tracking-wider">
-              <th className="text-left px-4 py-2">Team</th>
-              <th className="px-2 py-2 text-center">P</th>
-              <th className="px-2 py-2 text-center">W</th>
-              <th className="px-2 py-2 text-center">D</th>
-              <th className="px-2 py-2 text-center">L</th>
-              <th className="px-2 py-2 text-center">GD</th>
-              <th className="px-3 py-2 text-center font-bold text-cyan-400">Pts</th>
+              <th className="text-left px-3 py-2.5 w-1/2 sm:w-auto">Team</th>
+              <th className="px-2 py-2.5 text-center w-8">P</th>
+              <th className="px-2 py-2.5 text-center w-8">W</th>
+              <th className="px-2 py-2.5 text-center w-8">D</th>
+              <th className="px-2 py-2.5 text-center w-8">L</th>
+              <th className="px-2 py-2.5 text-center w-10">GD</th>
+              <th className="px-3 py-2.5 text-center font-bold text-cyan-400 w-10">Pts</th>
             </tr>
           </thead>
           <tbody>
@@ -37,20 +37,20 @@ function GroupTable({ groupName, teams }) {
                 key={team.name}
                 className={`border-t border-white/5 ${i < 2 ? 'bg-cyan-500/5' : ''}`}
               >
-                <td className="px-4 py-2.5">
+                <td className="px-3 py-2.5">
                   <span className="flex items-center gap-2">
-                    <span className="text-lg">{team.flag}</span>
-                    <span className="font-semibold text-white">{team.name}</span>
+                    <span className="text-lg shrink-0">{team.flag}</span>
+                    <span className="font-semibold text-white truncate">{team.name}</span>
                   </span>
                 </td>
-                <td className="px-2 py-2.5 text-center text-gray-400">{team.played}</td>
-                <td className="px-2 py-2.5 text-center text-gray-400">{team.won}</td>
-                <td className="px-2 py-2.5 text-center text-gray-400">{team.drawn}</td>
-                <td className="px-2 py-2.5 text-center text-gray-400">{team.lost}</td>
-                <td className="px-2 py-2.5 text-center text-gray-400">
+                <td className="px-2 py-2.5 text-center text-gray-400 shrink-0">{team.played}</td>
+                <td className="px-2 py-2.5 text-center text-gray-400 shrink-0">{team.won}</td>
+                <td className="px-2 py-2.5 text-center text-gray-400 shrink-0">{team.drawn}</td>
+                <td className="px-2 py-2.5 text-center text-gray-400 shrink-0">{team.lost}</td>
+                <td className="px-2 py-2.5 text-center text-gray-400 shrink-0">
                   {team.gd > 0 ? `+${team.gd}` : team.gd}
                 </td>
-                <td className="px-3 py-2.5 text-center font-bold text-cyan-400">{team.points}</td>
+                <td className="px-3 py-2.5 text-center font-bold text-cyan-400 shrink-0">{team.points}</td>
               </tr>
             ))}
           </tbody>
