@@ -1,73 +1,115 @@
-# React + TypeScript + Vite
+# ⚽ FIFA World Cup 2026 Hub
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A comprehensive, modern, and interactive hub for the 2026 FIFA World Cup! Built with React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+## ✨ Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 🏆 Tournament Content
+- **Live Scores & Results**: Real-time updates from all matches
+- **Groups & Standings**: Complete group stage tables with automatic qualification logic
+- **48 Teams**: Full list of all qualified nations
+- **16 Stadiums**: Venue information for all host cities in USA, Canada, and Mexico
+- **Knockout Bracket**: Visual representation of the knockout stages
+- **20+ News Articles**: Tournament news, match previews, and post-game analysis
 
-## React Compiler
+### 🎮 Fan Zone
+- **Match Predictor**: Predict scores for upcoming matches
+- **Leaderboard**: Compete with other fans (coming soon!)
+- **Digital Collectibles**: Unlock badges for your predictions (coming soon!)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 📱 User Experience
+- **Fully Responsive**: Perfect on mobile, tablet, and desktop
+- **Smooth Animations**: Powered by Framer Motion
+- **Lightning Fast**: Built with Vite
+- **Global Search**: Instantly search for teams, players, and news
+- **User Authentication**: Powered by Supabase
+- **Personalization**: Save your favorite team
 
-## Expanding the ESLint configuration
+## 🚀 Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
+- Node.js 18+
+- npm or yarn
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Installation
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/abd-man-1906/fifa-world-cup-2026.git
+   cd fifa-world-cup-2026
+   ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+3. **Set up environment variables**:
+   Create a `.env` file in the root directory:
+   ```bash
+   VITE_SUPABASE_URL=https://your-project.supabase.co
+   VITE_SUPABASE_ANON_KEY=your-anon-key
+   # Optional: for live API data
+   VITE_API_FOOTBALL_KEY=your-football-api-key
+   ```
+
+4. **Start the development server**:
+   ```bash
+   npm run dev
+   ```
+
+## 🔧 Tech Stack
+
+| Category | Technology |
+|----------|------------|
+| **Frontend** | React 18, TypeScript, Vite |
+| **Styling** | Tailwind CSS |
+| **Animations** | Framer Motion |
+| **Routing** | React Router DOM |
+| **Authentication** | Supabase |
+| **Database** | Supabase (PostgreSQL) |
+| **Hosting** | Vercel |
+
+## 📦 Project Structure
+
+```
+fifa-world-cup-2026/
+├── public/
+│   ├── data/           # Static tournament data (JSON)
+│   ├── ads.txt        # Google AdSense verification
+│   └── robots.txt     # SEO configuration
+├── src/
+│   ├── api/           # API layer (football.js)
+│   ├── components/    # Reusable UI components
+│   ├── lib/           # Utilities & Supabase client
+│   ├── pages/         # Page components
+│   └── App.tsx        # Main app & routing
+├── index.html
+└── package.json
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🌐 Deployment
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+This project is configured for **Vercel deployment**:
+- Push to GitHub and Vercel will automatically deploy your changes!
+- Don't forget to set your **environment variables** in Vercel Project Settings!
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 📊 Data Sources
+
+The hub currently uses static data files in `/public/data/`. To switch to live real-time data, add your API key to `.env`.
+
+## 🛡️ Security
+
+- All user data is stored securely via Supabase Auth
+- Row Level Security (RLS) enabled on all database tables
+- No passwords stored in plain text!
+
+## 📄 License
+
+MIT License. Feel free to use this project for your own World Cup excitement!
+
+## 🤝 Contributing
+
+PRs welcome! Let's make this the best World Cup hub on the internet! 🌍
+
+---
+Built with ❤️ for football fans everywhere! ⚽🏆
