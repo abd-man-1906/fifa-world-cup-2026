@@ -7,7 +7,10 @@
       "cc": "ca",
       "name": "BC Place",
       "capacity": 54000,
-      "coords": "49°16'36\"N 123°6'43\"W"
+      "coords": "49\u00b016'36\"N 123\u00b06'43\"W",
+      "opened": "1983",
+      "link": "https://en.wikipedia.org/wiki/BC_Place",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/ec/BC_Place_2015.jpg"
     },
     {
       "city": "Seattle",
@@ -15,7 +18,10 @@
       "cc": "us",
       "name": "Lumen Field",
       "capacity": 69000,
-      "coords": "47°35'43\"N 122°19'54\"W"
+      "coords": "47\u00b035'43\"N 122\u00b019'54\"W",
+      "opened": "2002",
+      "link": "https://en.wikipedia.org/wiki/Lumen_Field",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/52/Lumen_Field_2022.jpg"
     },
     {
       "city": "San Francisco Bay Area (Santa Clara)",
@@ -23,7 +29,10 @@
       "cc": "us",
       "name": "Levi's Stadium",
       "capacity": 71000,
-      "coords": "37.403°N 121.970°W"
+      "coords": "37.403\u00b0N 121.970\u00b0W",
+      "opened": "2014",
+      "link": "https://en.wikipedia.org/wiki/Levi%27s_Stadium",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/2/23/Levi%27s_Stadium_2014.jpg"
     },
     {
       "city": "Los Angeles (Inglewood)",
@@ -31,7 +40,10 @@
       "cc": "us",
       "name": "SoFi Stadium",
       "capacity": 70000,
-      "coords": "33.953°N 118.339°W"
+      "coords": "33.953\u00b0N 118.339\u00b0W",
+      "opened": "2020",
+      "link": "https://en.wikipedia.org/wiki/SoFi_Stadium",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/7b/SoFi_Stadium_2022.jpg"
     },
     {
       "city": "Guadalajara (Zapopan)",
@@ -39,7 +51,10 @@
       "cc": "mx",
       "name": "Estadio Akron",
       "capacity": 48000,
-      "coords": "20°40'54\"N 103°27'46\"W"
+      "coords": "20\u00b040'54\"N 103\u00b027'46\"W",
+      "opened": "2010",
+      "link": "https://en.wikipedia.org/wiki/Estadio_Akron",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Estadio_Akron_2018.jpg"
     },
     {
       "city": "Mexico City",
@@ -47,7 +62,10 @@
       "cc": "mx",
       "name": "Estadio Azteca",
       "capacity": 83000,
-      "coords": "19°18'11\"N 99°09'02\"W"
+      "coords": "19\u00b018'11\"N 99\u00b009'02\"W",
+      "opened": "1966",
+      "link": "https://en.wikipedia.org/wiki/Estadio_Azteca",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/75/Estadio_Azteca_2015.jpg"
     },
     {
       "city": "Monterrey (Guadalupe)",
@@ -55,7 +73,10 @@
       "cc": "mx",
       "name": "Estadio BBVA",
       "capacity": 53500,
-      "coords": "25°40'9\"N 100°14'40\"W"
+      "coords": "25\u00b040'9\"N 100\u00b014'40\"W",
+      "opened": "2015",
+      "link": "https://en.wikipedia.org/wiki/Estadio_BBVA",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Estadio_BBVA_Bancomer_2015.jpg"
     },
     {
       "city": "Houston",
@@ -63,7 +84,10 @@
       "cc": "us",
       "name": "NRG Stadium",
       "capacity": 72000,
-      "coords": "29°41'5\"N 95°24'39\"W"
+      "coords": "29\u00b041'5\"N 95\u00b024'39\"W",
+      "opened": "2002",
+      "link": "https://en.wikipedia.org/wiki/NRG_Stadium",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/1/1a/NRG_Stadium_2015.jpg"
     },
     {
       "city": "Dallas (Arlington)",
@@ -71,7 +95,10 @@
       "cc": "us",
       "name": "AT&T Stadium",
       "capacity": 94000,
-      "coords": "32°44'52\"N 97°5'34\"W"
+      "coords": "32\u00b044'52\"N 97\u00b05'34\"W",
+      "opened": "2009",
+      "link": "https://en.wikipedia.org/wiki/AT%26T_Stadium",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/a2/AT%26T_Stadium_2015.jpg"
     },
     {
       "city": "Kansas City",
@@ -79,7 +106,10 @@
       "cc": "us",
       "name": "Arrowhead Stadium",
       "capacity": 73000,
-      "coords": "39°2'56\"N 94°29'2\"W"
+      "coords": "39\u00b02'56\"N 94\u00b029'2\"W",
+      "opened": "1972",
+      "link": "https://en.wikipedia.org/wiki/Arrowhead_Stadium",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/30/Arrowhead_Stadium_2021.jpg"
     },
     {
       "city": "Atlanta",
@@ -87,7 +117,10 @@
       "cc": "us",
       "name": "Mercedes-Benz Stadium",
       "capacity": 75000,
-      "coords": "33°45'20\"N 84°24'00\"W"
+      "coords": "33\u00b045'20\"N 84\u00b024'00\"W",
+      "opened": "2017",
+      "link": "https://en.wikipedia.org/wiki/Mercedes-Benz_Stadium",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Mercedes-Benz_Stadium_2018.jpg"
     },
     {
       "city": "Miami (Miami Gardens)",
@@ -95,7 +128,10 @@
       "cc": "us",
       "name": "Hard Rock Stadium",
       "capacity": 65000,
-      "coords": "25°57'29\"N 80°14'20\"W"
+      "coords": "25\u00b057'29\"N 80\u00b014'20\"W",
+      "opened": "1987",
+      "link": "https://en.wikipedia.org/wiki/Hard_Rock_Stadium",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/9/91/Hard_Rock_Stadium_2016.jpg"
     },
     {
       "city": "Toronto",
@@ -103,7 +139,10 @@
       "cc": "ca",
       "name": "BMO Field",
       "capacity": 45000,
-      "coords": "43°38'0\"N 79°25'07\"W"
+      "coords": "43\u00b038'0\"N 79\u00b025'07\"W",
+      "opened": "2007",
+      "link": "https://en.wikipedia.org/wiki/BMO_Field",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/1/11/BMO_Field_2016.jpg"
     },
     {
       "city": "Boston (Foxborough)",
@@ -111,7 +150,10 @@
       "cc": "us",
       "name": "Gillette Stadium",
       "capacity": 65000,
-      "coords": "42.091°N 71.264°W"
+      "coords": "42.091\u00b0N 71.264\u00b0W",
+      "opened": "2002",
+      "link": "https://en.wikipedia.org/wiki/Gillette_Stadium",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Gillette_Stadium_2015.jpg"
     },
     {
       "city": "Philadelphia",
@@ -119,7 +161,10 @@
       "cc": "us",
       "name": "Lincoln Financial Field",
       "capacity": 69000,
-      "coords": "39°54'3\"N 75°10'3\"W"
+      "coords": "39\u00b054'3\"N 75\u00b010'3\"W",
+      "opened": "2003",
+      "link": "https://en.wikipedia.org/wiki/Lincoln_Financial_Field",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/7b/Lincoln_Financial_Field_2018.jpg"
     },
     {
       "city": "New York/New Jersey (East Rutherford)",
@@ -127,7 +172,10 @@
       "cc": "us",
       "name": "MetLife Stadium",
       "capacity": 82500,
-      "coords": "40°48'48.7\"N 74°4'27.7\"W"
+      "coords": "40\u00b048'48.7\"N 74\u00b04'27.7\"W",
+      "opened": "2010",
+      "link": "https://en.wikipedia.org/wiki/MetLife_Stadium",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/37/MetLife_Stadium_2019.jpg"
     }
   ]
 }

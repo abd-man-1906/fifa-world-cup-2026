@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Environment Variables (DO NOT COMMIT!)
+.env
+.env.local
+.env.*.local
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -23,6 +28,4 @@ dist-ssr
 *.sln
 *.sw?
 .vite-source-tags.js
-.vercel
-
 .vercel
